@@ -13,9 +13,30 @@ const displayError = (error) => {
 // main function
 const startApp = () => {
 
+	// const getDataFromServer = (url) => {
+	// 	// gets all songs from database
+	// 	fetch(url).then(response => {
+	// 		console.log('server response:', response);
+	// 	}, error => displayError(error));
+	// }
+
+	const sendDataToServer= (data, url) => {
+		// send videos to php server	
+		let params = {
+   			method: "POST",
+   			headers: {
+      			"Content-Type": "application/json; charset=utf-8"
+   			},
+   			body: JSON.stringify(data)
+		};
+
+		fetch(url, params)
+			.then(
+				response => console.log('successfuly sent data to server'), 
+				error => displayError(error));
+	};
 
 	const displaySearchResult = (result) => {
-
 		// store result in an array
 		// each item in array will have an id, title and thumbnails
 		const searchResult = result.items.map(item => {
@@ -25,7 +46,6 @@ const startApp = () => {
 				thumbnails: item.snippet.thumbnails
 			};
 		});
-
 		console.log(searchResult);
 	};
 
