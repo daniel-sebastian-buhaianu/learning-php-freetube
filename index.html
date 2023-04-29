@@ -6,10 +6,18 @@
 	</head>
 	<body>
 		<h1>spotube</h1>
-		<form>
-			<input type="text" name="search_query" placeholder="search...">
+		
+		<div id="search_form">
+			<input id ="search_query" type="text" name="search_query" placeholder="search...">
 			<input id="search_btn" type="submit" value="Search">
-		</form>
-		<script type="text/javascript" src="script.js"></script>
+		</div>
+		
+		<div id="search_results">
+			<ol>
+				<li><a href="link">name</a></li>
+			</ol>	
+		</div>
+		<script src="https://apis.google.com/js/api.js"></script>
+		<script type="module" src="script.js"></script>
 	</body>
 </html>
