@@ -13,15 +13,22 @@ const displayError = (error) => {
 // main function
 const startApp = () => {
 
-	// const getDataFromServer = (url) => {
-	// 	// gets all songs from database
-	// 	fetch(url).then(response => {
-	// 		console.log('server response:', response);
-	// 	}, error => displayError(error));
-	// }
+	const getDataFromServer = (url, func) => {
+		fetch(url).then(
+			response => {
+				if (func)
+				{
+					func(response);
+				}
+				else
+				{
+					console.log('getDataFromServer', response);
+				}
+			},		
+			error => displayError(error));
+	};
 
-	const sendDataToServer= (data, url) => {
-		// send videos to php server	
+	const sendDataToServer= (data, url, func) => {
 		let params = {
    			method: "POST",
    			headers: {
@@ -32,36 +39,61 @@ const startApp = () => {
 
 		fetch(url, params)
 			.then(
-				response => console.log('successfuly sent data to server'), 
+				response => {
+					if (func)
+					{
+						func(response);
+					}
+					else
+					{
+						console.log('sendDataToServer', response); 
+
+					}
+				},
+
 				error => displayError(error));
 	};
 
-	const displaySearchResult = (result) => {
-		// store result in an array
+	const createVideosArray = (response) => {
+		// create videos array from response object
 		// each item in array will have an id, title and thumbnails
-		const searchResult = result.items.map(item => {
+		const videos = response.result.items.map(item => {
 			return {
 				id: item.id.videoId,
 				title: item.snippet.title,
 				thumbnails: item.snippet.thumbnails
 			};
 		});
-		console.log(searchResult);
+		
+		return videos;
 	};
 
-	const getSearchResult = () => {
-
-		const search_query = document.getElementById('search_query').value;
-
+	const getSearchResult = (search_query, func) => {
 		// search youtube videos and display 6 results 
 		gapi.client.youtube.search.list({
 			'part': [ 'snippet' ],
 			'maxResults': 6,
 			'q': search_query
-		}).then(response => displaySearchResult(response.result), error => displayError(error));
+		}).then(
+			response => {
+				if (func)
+				{
+					func(response);
+				}
+				else
+				{
+					console.log('getSearchResult', response);
+				}
+			},
+			error => displayError(error));
 	};
 
-	document.getElementById('search_btn').addEventListener('click', getSearchResult);
+	const handleSearchBtnClick = () => {
+		console.log('search btn was clicked');
+	};
+
+	document.getElementById('search_btn')
+		.addEventListener('click', handleSearchBtnClick);
 };
 
 
