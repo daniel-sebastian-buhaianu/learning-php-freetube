@@ -15,9 +15,8 @@ const startApp = () => {
 
 	const getDataFromServer = async (url) => {
 		const response = await fetch(url);
-		console.log('getDataFromServer response', response);
 		const jsonData = await response.json();
-		console.log('getDataFromServer response.json()', jsonData);
+		return jsonData;
 	};
 
 	const sendDataToServer= async (data, url) => {
@@ -30,7 +29,7 @@ const startApp = () => {
 		};
 
 		const response = await fetch(url, params);
-		console.log('sendDataToServer response', response);
+		return response;
 	};
 
 	const createVideosArray = (response) => {
@@ -47,30 +46,113 @@ const startApp = () => {
 		return videos;
 	};
 
-	const getSearchResult = async (searchQuery) => {
+	const getVideos = async (searchQuery) => {
 		// search youtube videos and display 6 results 
 		const response = await gapi.client.youtube.search.list({
 			'part': [ 'snippet' ],
 			'maxResults': 6,
 			'q': searchQuery
 		});
-		console.log('getSearchResult response', response);
+		return response;
 	};
 
 	const getSearchQueryValue = () => {
 		return document.getElementById('search_query').value;
 	}
 
-	const handleSearchBtnClick = () => {
-		const searchQuery = getSearchQueryValue();
-		
-		getDataFromServer(`php/get_videos.php?search_query=${searchQuery}`);
+	const displayVideos = (videos, htmlParentNode) => {
+
+		if (videos.length === 0)
+		{
+			const p = document.createElement('p');
+			const textNode = document.createTextNode('No results.');
+
+			p.appendChild(textNode);
+			htmlParentNode.appendChild(p);
+		}
+		else
+		{
+			const ol = document.createElement('ol');
+
+			for (let video of videos)
+			{
+				const { id, title } = video;
+				const li = document.createElement('li');
+				const a = document.createElement('a');
+				const textNode = document.createTextNode(title);
+
+				a.setAttribute('href', `https://www.youtube.com/watch?v=${id}`);
+				a.setAttribute('target', '_youtube');
+
+				a.appendChild(textNode);
+				li.appendChild(a);
+				ol.appendChild(li);
+			}
+
+			htmlParentNode.appendChild(ol);
+		}
+	}
+
+	const removeVideos = (htmlParentNode) => {
+		if (htmlParentNode.childElementCount > 0)
+		{
+			htmlParentNode.removeChild(htmlParentNode.firstElementChild);
+		}
+	} 
+
+	const memoizeSearch = () => {
+			let cache = {};
+			let previousQuery = null;
+
+			return async (searchQuery) => {
+
+				if (previousQuery !== searchQuery)
+				{
+
+					if (searchQuery in cache)
+					{
+						console.log('from cache');
+						previousQuery = searchQuery;
+						return cache[searchQuery];						
+					}
+					else
+					{
+						console.log('from db');
+						return getDataFromServer(`php/get_videos.php?search_query=${searchQuery}`)
+							.then(videos => {
+								cache[searchQuery] = videos;
+								previousQuery = searchQuery;
+								return videos;
+							});
+					}
+				}
+				else
+				{
+					console.log('from previousQuery');
+					return cache[previousQuery];
+				}
+
+				
+			};
 	};
 
-	document.getElementById('search_btn')
-		.addEventListener('click', handleSearchBtnClick);
-};
+	const handleSearchBtnClick = (searchVideos) => {
+		const searchQuery = getSearchQueryValue();
+		
+		searchVideos(searchQuery).then(videos => {
+			const divWrapper = document.getElementById('search_results');
+			removeVideos(divWrapper);
+			displayVideos(videos, divWrapper);
+		})
+	};
 
+	const searchFunc = memoizeSearch();
+
+	document.getElementById('search_btn')
+		.addEventListener('click', () => {
+			return handleSearchBtnClick(searchFunc);
+		});
+};
 
 // load google's youtube api
 // if succesful -> start app, otherwise -> stop app
