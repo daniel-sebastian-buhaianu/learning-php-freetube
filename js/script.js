@@ -54,6 +54,49 @@ const app = () => {
 		return document.getElementById('search_query').value;
 	}
 
+	const decodeHTMLEntities = (str) => {
+
+		const element = document.createElement('div');
+
+		if(str && typeof str === 'string') 
+		{
+	      // strip script/html tags
+	      str = str.replace(/<script[^>]*>([\S\s]*?)<\/script>/gmi, '');
+	      str = str.replace(/<\/?\w(?:[^"'>]|"[^"]*"|'[^']*')*>/gmi, '');
+	      element.innerHTML = str;
+	      str = element.textContent;
+    	}
+    	
+    	element.remove();
+    	
+    	return str;
+	}
+
+	const createVideoCard = (videoData) => {
+		const { id, thumbnails } = videoData;
+		const title = decodeHTMLEntities(videoData['title']);
+		
+		const videoCard = document.createElement('div');
+		videoCard.setAttribute('class', 'video_card');
+
+		const cardImg = document.createElement('img');
+		cardImg.setAttribute('class', 'card_image');
+		cardImg.setAttribute('src', thumbnails['medium']);
+
+		const cardTitle = document.createElement('p');
+		cardTitle.setAttribute('class', 'card_title');
+		cardTitle.appendChild(document.createTextNode(title));
+
+		const cardBtn = document.createElement('button');
+		cardBtn.setAttribute('class', 'card_btn');
+		cardBtn.appendChild(document.createTextNode('Download'));
+
+		videoCard.appendChild(cardImg);
+		videoCard.appendChild(cardTitle);
+		videoCard.appendChild(cardBtn);
+		return videoCard;
+	}
+
 	const displayVideos = (videos, htmlParentNode) => {
 
 		if (videos.length === 0)
@@ -66,24 +109,16 @@ const app = () => {
 		}
 		else
 		{
-			const ol = document.createElement('ol');
+			const videoCards = document.createElement('div');
+			videoCards.setAttribute('class', 'video_cards');
 
 			for (let video of videos)
 			{
-				const { id, title } = video;
-				const li = document.createElement('li');
-				const a = document.createElement('a');
-				const textNode = document.createTextNode(title);
-
-				a.setAttribute('href', `https://www.youtube.com/watch?v=${id}`);
-				a.setAttribute('target', '_youtube');
-
-				a.appendChild(textNode);
-				li.appendChild(a);
-				ol.appendChild(li);
+				const videoCard = createVideoCard(video);
+				videoCards.appendChild(videoCard);
 			}
 
-			htmlParentNode.appendChild(ol);
+			htmlParentNode.appendChild(videoCards);
 		}
 	}
 

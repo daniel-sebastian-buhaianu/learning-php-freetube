@@ -5,15 +5,20 @@
 		<link rel="stylesheet" type="text/css" href="css/styles.css">
 	</head>
 	<body>
-		<h1>spotube</h1>
+		<header>
+			<h1>SpoTube</h1>
+		</header>
+
+		<main>
+			<div id="search_form">
+				<input id ="search_query" type="text" name="search_query" placeholder="search...">
+				<input id="search_btn" type="submit" value="Search">
+			</div>
 		
-		<div id="search_form">
-			<input id ="search_query" type="text" name="search_query" placeholder="search...">
-			<input id="search_btn" type="submit" value="Search">
-		</div>
+			<div id="search_results">
+			</div>
+		</main>
 		
-		<div id="search_results">
-		</div>
 		<script src="https://apis.google.com/js/api.js"></script>
 		<script type="module" src="js/script.js"></script>
 	</body>
