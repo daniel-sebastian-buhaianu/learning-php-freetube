@@ -20,7 +20,7 @@
 			<input type="email" name="email"><br><br>
 			password:
 			<input type="password" name="password"><br><br>
-			<input type="submit" value="log in"><hr>
+			<input type="submit" name="submit" value="log in"><hr>
 		</form>
 		<p>If you don't have an account, <a href="../php/register.php">please register.</a></p>
 	</main>
