@@ -1,4 +1,8 @@
-header > h1 { text-align: center; }
+nav { float: right; }
+
+nav > a { font-size: 1.2em; margin-right: 1em; }
+
+header > h1 { clear: both; text-align: center; }
 
 main,
 .video_cards,
@@ -7,6 +11,7 @@ main,
 #search_results { width: 350px; }
 
 .video_card { 
+	position: relative;
 	width: 100%;
 	margin-top: 1rem;
 	border: 1px solid black;
@@ -16,6 +21,6 @@ main,
 
 .card_title { text-align: center; font-weight: bold; }
 
-.card_btn { margin-bottom: 1rem; }
+.card_btn { margin-bottom: 1rem; font-size: 1em; }
 
 .card_btn:hover { cursor: pointer }

@@ -75,6 +75,7 @@ const app = () => {
 	const createVideoCard = (videoData) => {
 		const { id, thumbnails } = videoData;
 		const title = decodeHTMLEntities(videoData['title']);
+		const downloadVideoLink = `https://www.ssyoutube.com/watch?v=${id}`;
 		
 		const videoCard = document.createElement('div');
 		videoCard.setAttribute('class', 'video_card');
@@ -90,6 +91,7 @@ const app = () => {
 		const cardBtn = document.createElement('button');
 		cardBtn.setAttribute('class', 'card_btn');
 		cardBtn.appendChild(document.createTextNode('Download'));
+		cardBtn.addEventListener('click', event => handleCardBtnClick(event));
 
 		videoCard.appendChild(cardImg);
 		videoCard.appendChild(cardTitle);
@@ -172,16 +174,27 @@ const app = () => {
 		})
 	};
 
+	const handleCardBtnClick = (event) => {
+		alert('To download any video, please log in.');
+	}
+
 	const searchFunc = memoizeSearch();
 
-	document.getElementById('search_btn').addEventListener('click', () => handleSearch(searchFunc));
-
-	document.getElementById('search_query').addEventListener('keydown', (event) => {
+	const addEventListeners = () => {
+		
+		document.getElementById('search_btn').addEventListener('click', () => handleSearch(searchFunc));
+		
+		document.getElementById('search_query').addEventListener('keydown', (event) => {
 		if (event.keyCode === 13)
 		{
 			return handleSearch(searchFunc);
 		}
 	});
+		
+	}
+
+	addEventListeners();	
+
 };
 
 // Load YouTube API
