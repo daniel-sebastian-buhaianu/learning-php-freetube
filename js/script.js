@@ -4,14 +4,8 @@ import { googleApiKey } from './config.js';
 const youtubeApiUrl = 'https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest';
 
 
-// provides error feedback
-const displayError = (error) => {
-	alert('Error!');
-	console.log(error);
-};
-
-// main function
-const startApp = () => {
+// Main
+const app = () => {
 
 	const getDataFromServer = async (url) => {
 		const response = await fetch(url);
@@ -111,13 +105,11 @@ const startApp = () => {
 
 					if (searchQuery in cache)
 					{
-						console.log('from cache');
 						previousQuery = searchQuery;
 						return cache[searchQuery];						
 					}
 					else
 					{
-						console.log('from db');
 						return getDataFromServer(`php/get_videos.php?search_query=${searchQuery}`)
 							.then(videos => {
 								cache[searchQuery] = videos;
@@ -128,7 +120,6 @@ const startApp = () => {
 				}
 				else
 				{
-					console.log('from previousQuery');
 					return cache[previousQuery];
 				}
 
@@ -136,10 +127,10 @@ const startApp = () => {
 			};
 	};
 
-	const handleSearchBtnClick = (searchVideos) => {
+	const handleSearch = (searchFunc) => {
 		const searchQuery = getSearchQueryValue();
 		
-		searchVideos(searchQuery).then(videos => {
+		searchFunc(searchQuery).then(videos => {
 			const divWrapper = document.getElementById('search_results');
 			removeVideos(divWrapper);
 			displayVideos(videos, divWrapper);
@@ -148,17 +139,19 @@ const startApp = () => {
 
 	const searchFunc = memoizeSearch();
 
-	document.getElementById('search_btn')
-		.addEventListener('click', () => {
-			return handleSearchBtnClick(searchFunc);
-		});
+	document.getElementById('search_btn').addEventListener('click', () => handleSearch(searchFunc));
+
+	document.getElementById('search_query').addEventListener('keydown', (event) => {
+		if (event.keyCode === 13)
+		{
+			return handleSearch(searchFunc);
+		}
+	});
 };
 
-// load google's youtube api
-// if succesful -> start app, otherwise -> stop app
+// Load YouTube API
 gapi.load('client', () => {
 	gapi.client.init({ 'apiKey': googleApiKey })
-		.then(
-			response => gapi.client.load(youtubeApiUrl).then(startApp, displayError),
-			error => displayError(error));
+		.then(gapi.client.load(youtubeApiUrl))
+			.then(app)
 });
