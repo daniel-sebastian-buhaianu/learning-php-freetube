@@ -13,22 +13,14 @@ const displayError = (error) => {
 // main function
 const startApp = () => {
 
-	const getDataFromServer = (url, func) => {
-		fetch(url).then(
-			response => {
-				if (func)
-				{
-					func(response);
-				}
-				else
-				{
-					console.log('getDataFromServer', response);
-				}
-			},		
-			error => displayError(error));
+	const getDataFromServer = async (url) => {
+		const response = await fetch(url);
+		console.log('getDataFromServer response', response);
+		const jsonData = await response.json();
+		console.log('getDataFromServer response.json()', jsonData);
 	};
 
-	const sendDataToServer= (data, url, func) => {
+	const sendDataToServer= async (data, url) => {
 		let params = {
    			method: "POST",
    			headers: {
@@ -37,21 +29,8 @@ const startApp = () => {
    			body: JSON.stringify(data)
 		};
 
-		fetch(url, params)
-			.then(
-				response => {
-					if (func)
-					{
-						func(response);
-					}
-					else
-					{
-						console.log('sendDataToServer', response); 
-
-					}
-				},
-
-				error => displayError(error));
+		const response = await fetch(url, params);
+		console.log('sendDataToServer response', response);
 	};
 
 	const createVideosArray = (response) => {
@@ -68,28 +47,24 @@ const startApp = () => {
 		return videos;
 	};
 
-	const getSearchResult = (search_query, func) => {
+	const getSearchResult = async (searchQuery) => {
 		// search youtube videos and display 6 results 
-		gapi.client.youtube.search.list({
+		const response = await gapi.client.youtube.search.list({
 			'part': [ 'snippet' ],
 			'maxResults': 6,
-			'q': search_query
-		}).then(
-			response => {
-				if (func)
-				{
-					func(response);
-				}
-				else
-				{
-					console.log('getSearchResult', response);
-				}
-			},
-			error => displayError(error));
+			'q': searchQuery
+		});
+		console.log('getSearchResult response', response);
 	};
 
+	const getSearchQueryValue = () => {
+		return document.getElementById('search_query').value;
+	}
+
 	const handleSearchBtnClick = () => {
-		console.log('search btn was clicked');
+		const searchQuery = getSearchQueryValue();
+		
+		getDataFromServer(`php/get_videos.php?search_query=${searchQuery}`);
 	};
 
 	document.getElementById('search_btn')
