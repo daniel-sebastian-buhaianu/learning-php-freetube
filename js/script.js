@@ -15,9 +15,9 @@ const app = () => {
 
 	const sendDataToServer= async (data, url) => {
 		let params = {
-   			method: "POST",
+   			method: 'POST',
    			headers: {
-      			"Content-Type": "application/json; charset=utf-8"
+      			'Content-Type': 'application/json; charset=utf-8'
    			},
    			body: JSON.stringify(data)
 		};
@@ -181,7 +181,7 @@ const app = () => {
 	const searchFunc = memoizeSearch();
 
 	const addEventListeners = () => {
-		
+
 		document.getElementById('search_btn').addEventListener('click', () => handleSearch(searchFunc));
 		
 		document.getElementById('search_query').addEventListener('keydown', (event) => {
