@@ -137,6 +137,8 @@ function loginUser($email)
 
 function getVideosByTitle($str)
 {
+	global $mysqli;
+
 	$param = '%' . $str . '%';
 	$stmt = $mysqli->prepare('SELECT id, title FROM videos WHERE title LIKE ?');
 	$stmt->bind_param('s', $param);
@@ -177,6 +179,8 @@ function getVideosByTitle($str)
 
 function addVideosToDatabase($videos)
 {
+	global $mysqli;
+
   // Iterate array of videos 
   // and add to database if it doesn't already exist
   for ($i = 0, $n = count($videos); $i < $n ; $i++)

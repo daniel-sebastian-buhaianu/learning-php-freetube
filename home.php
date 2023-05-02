@@ -13,11 +13,13 @@ if (!isset($_SESSION['userId']))
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>spotube</title>
+		<title>spotube | home</title>
 		<link href='<?php echo BASE_URL; ?>styles.css' rel='stylesheet' type='text/css'>
 	</head>
 	<body>
 		<header>
+				<a href='<?php echo BASE_URL; ?>upload.php'>Upload</a>
+			
 			<nav>
 				<form name='logout' action='<?php echo BASE_URL; ?>php/logout.php' method='post'>
 					<input type='submit' name='logout' value='Log Out'>
@@ -37,6 +39,6 @@ if (!isset($_SESSION['userId']))
 		</main>
 		
 		<script src='https://apis.google.com/js/api.js'></script>
-		<script type='module' src='<?php echo BASE_URL; ?>js/script.js'></script>
+		<script type='module' src='<?php echo BASE_URL; ?>js/home.js'></script>
 	</body>
 </html>

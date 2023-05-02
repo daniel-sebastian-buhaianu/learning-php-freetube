@@ -33,9 +33,10 @@ if (isset($_SESSION['userId']))
 		
 			<div id='search_results'>
 			</div>
+			
 		</main>
-		
+	
 		<script src='https://apis.google.com/js/api.js'></script>
-		<script type='module' src='<?php echo BASE_URL; ?>js/script.js'></script>
+		<script type='module' src='<?php echo BASE_URL; ?>js/index.js'></script>
 	</body>
 </html>
