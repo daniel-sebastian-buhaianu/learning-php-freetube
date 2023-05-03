@@ -1,7 +1,12 @@
-<?php  
+<?php 
 
 require_once('php/config.php');
-session_start();
+session_start(); 
+
+if (!isset($_SESSION['userId']))
+{
+	header('Location: '.BASE_URL.'index.php');
+}
 
 ?>
 
@@ -13,13 +18,19 @@ session_start();
 	<title>spotube | upload</title>
 </head>
 <body>
-	<h1>Upload Video</h1>
+	<header>
+		<a href='<?php echo BASE_URL ?>home.php'>Home</a> >
+		<span>Upload</span>
+		<hr>
+		<h1>Upload Video</h1>
+	</header>
 	<p>After you have downloaded the video on your computer, you can upload it to your account.</p>
 	<form action="php/upload_video.php" method="post" enctype="multipart/form-data">
 		Select video to upload:
 		<input type="hidden" name="MAX_FILE_SIZE" value="100000000">
-		 <input type="hidden" name="<?php echo ini_get("session.upload_progress.name"); ?>" value="123" />
-		<input type="file" name="videoToUpload">
+		<input type="hidden" name="VIDEO_ID" value="<?php echo $_GET['videoId']; ?>">
+		<input type="hidden" name="USER_ID" value="<?php echo $_SESSION['userId']; ?>">
+		<input type="file" name="videoToUpload" accept="video/mp4">
 		<input type="submit" name="submit" value="Upload Video">
 	</form>
 </body>

@@ -135,13 +135,54 @@ function loginUser($email)
 	header('Location: '.BASE_URL.'home.php');
 }
 
-function getVideosByTitle($str)
+function getYtVideosByTitle($str)
 {
 	global $mysqli;
 
 	$param = '%' . $str . '%';
 	$stmt = $mysqli->prepare('SELECT id, title FROM videos WHERE title LIKE ?');
 	$stmt->bind_param('s', $param);
+	$stmt->execute();
+	$stmt->bind_result($id, $title);
+	
+	// store results in array
+	$videos = array();
+	$index = 0;
+	while ($stmt->fetch()) {
+		$videos[$index]['id'] = $id;
+		$videos[$index]['title'] = $title;
+		$index++;
+	}
+	$stmt->close();
+
+	// now we need to get the thumbnails for each video
+	for ($i = 0; $i < $index; $i++)
+	{
+		$video_id = $videos[$i]['id'];
+
+		$stmt = $mysqli->prepare('SELECT src_default, src_high, src_medium FROM video_thumbnails WHERE id = ?');
+		$stmt->bind_param('s', $video_id);
+		$stmt->execute();
+		$stmt->bind_result($src_default, $src_high, $src_medium);
+		$stmt->fetch();
+
+		$videos[$i]['thumbnails'] = array();
+		$videos[$i]['thumbnails']['default'] = $src_default;
+		$videos[$i]['thumbnails']['high'] = $src_high;
+		$videos[$i]['thumbnails']['medium'] = $src_medium;
+
+		$stmt->close();
+	}
+
+	return $videos;
+}
+
+function getVideosUploadedByUser($userId)
+{
+	global $mysqli;
+
+	$stmt = $mysqli->prepare('SELECT id, title FROM videos WHERE uploaded_by=?');
+	$stmt->bind_param('i', $userId);
 	$stmt->execute();
 	$stmt->bind_result($id, $title);
 	
@@ -223,6 +264,51 @@ function addVideosToDatabase($videos)
   }
 }
 
+function countWords($str)
+{
+	$words = array();
+	$tok = strtok($str, " ,;?!-|.@*%#$^&()'\":_+/\\><~`");
+	
+	while ($tok !== false)
+	{
+		$words[] = $tok;
+		$tok = strtok(" ,;?!-|.@*%#$^&()'\":_+/\\><~`");
+	}
+	
+	return $words;
+}
+
+function calcStringEquality($string1, $string2)
+{
+
+	$str1 = countWords($string1);
+	$str2 = countWords($string2);
+
+	$i = 0; 
+	$j = 0; 
+	$count = 0;
+	$n = count($str1); 
+	$m = count($str2);
+
+	while ($i < $n && $j < $m)
+	{
+		$wordI = $str1[$i];
+		$wordJ = $str2[$j];
+		
+		if (strcmp($wordI, $wordJ) == 0)
+		{
+			$count++;
+		}
+
+		$i++;
+		$j++;
+	}
+
+	$maxLen = max($n, $m);
+	$equalityFactor = round($count / $maxLen * 100);
+
+	return $equalityFactor;
+}
 
 
 ?>

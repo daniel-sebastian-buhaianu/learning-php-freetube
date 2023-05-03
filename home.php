@@ -18,8 +18,8 @@ if (!isset($_SESSION['userId']))
 	</head>
 	<body>
 		<header>
-				<a href='<?php echo BASE_URL; ?>upload.php'>Upload</a>
-			
+				<a href='<?php echo BASE_URL; ?>upload.php'>Upload</a> |
+				<a href='<?php echo BASE_URL; ?>my-videos.php'>My Videos</a>
 			<nav>
 				<form name='logout' action='<?php echo BASE_URL; ?>php/logout.php' method='post'>
 					<input type='submit' name='logout' value='Log Out'>

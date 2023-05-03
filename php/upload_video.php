@@ -1,28 +1,71 @@
 <?php  
 
-require_once('config.php');
+require_once('helper_functions.php');
 
 if (isset($_POST['submit']))
 {
 
-	echo '<p>Max file size: ' . $_POST['MAX_FILE_SIZE'] . '</p>';
+	$filename = $_FILES['videoToUpload']['name'];
+	$filename = substr($filename, 0, strlen($filename) - 4);
 
-	echo '<p> File size: ' . $_FILES['videoToUpload']['size'] . '</p>';
+	$check = $mysqli->prepare('SELECT title FROM videos WHERE id=?');
+	$check->bind_param('s', $_POST['VIDEO_ID']);
+	$check->execute();
+	$check->bind_result($videoTitle);
+	$check->fetch();
+	$check->close();
+	$videoTitle = html_entity_decode($videoTitle, ENT_QUOTES);
 
-	$uploaddir = getcwd() .'/../uploads/';
-	$uploadfile = $uploaddir . basename($_FILES['videoToUpload']['name']);
+	$equalityFactor = calcStringEquality($filename, $videoTitle);
 
-	echo '<pre>';
-	if (move_uploaded_file($_FILES['videoToUpload']['tmp_name'], $uploadfile)) {
-	    echo "File is valid, and was successfully uploaded.\n";
-	} else {
-	    echo "Possible file upload attack!\n";
+	if ($equalityFactor < 98)
+	{
+		echo "<p>Error: The file you are trying to upload doesn't match the one you've downloaded.</p>";
+		exit();
 	}
 
-	echo 'Here is some more debugging info:';
-	print_r($_FILES);
+	$targetDir = getcwd() .'/../uploads/';
+	$targetFile = $targetDir . $_POST['VIDEO_ID'] . '.mp4';
 
-	print "</pre>";
+	if (file_exists($targetFile))
+	{
+		echo '<p>Error: file already exists</p>';
+		exit();
+	}
+
+	if ($_FILES['videoToUpload']['size'] > $_POST['MAX_FILE_SIZE'])
+	{
+		echo '<p>Error: file is too big</p>';
+		exit();
+	}
+
+	$stmt = $mysqli->prepare('UPDATE videos SET uploaded_by=? WHERE id=?');
+	$stmt->bind_param('is', $_SESSION['userId'], $_POST['VIDEO_ID']);	
+	if ($stmt->execute())
+	{
+		$stmt->close();
+
+		if (!is_dir($targetDir)) 
+		{
+			mkdir($targetDir, 0755);
+		}
+
+		if (move_uploaded_file($_FILES['videoToUpload']['tmp_name'], $targetFile))
+		{
+			echo '<p>File is valid and was successfully uploaded!</p>';
+			exit();
+		}
+		else
+		{
+			echo '<p>Error uploading file</p>';
+			exit();
+		}
+	}
+	else
+	{
+		echo 'Error: could not update database';
+		exit();
+	}
 }
 
 ?>

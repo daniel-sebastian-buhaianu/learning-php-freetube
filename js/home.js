@@ -15,18 +15,22 @@ const applyJS = () => {
 	const handleSearch = (searchFunc) => {
 		const searchQuery = getValueFromElement(document.getElementById('search_query'));
 		
-		searchFunc(searchQuery, 'php/get_videos.php').then(videos => {
+		searchFunc(searchQuery, 'php/get_yt_videos.php').then(videos => {
 			
 			const divWrapper = document.getElementById('search_results');
 			removeFirstChildFromParent(divWrapper);
 			displayVideos(videos, divWrapper);
 
 			const cardBtns = document.getElementsByClassName('card_btn');
+			let i = 0;
 			for (let btn of cardBtns)
 			{
+				const windowLocation = `upload.php?videoId=${videos[i]['id']}`;
 				btn.addEventListener('click', () => {
-					window.location = 'upload.php';
+					window.location = windowLocation;
 				});
+
+				i++;
 			}
 		});
 
