@@ -3,11 +3,6 @@
 require_once('php/config.php'); 
 session_start(); 
 
-if (isset($_SESSION['userId']))
-{
-	header('Location: '.BASE_URL.'home.php');
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -16,7 +11,7 @@ if (isset($_SESSION['userId']))
 		<meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>FreeTube</title>
-		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/index.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/watch.css">
 	</head>
 
 	<body>
@@ -28,12 +23,24 @@ if (isset($_SESSION['userId']))
 		</header>
 
 		<main>
-			<div id='searchWrapper'>
+			<section id='searchWrapper'>
 				<input id ='searchBar' type='text' name='searchBar' placeholder='search youtube videos...'>
 				<input id='searchBtn' type='submit' value='Search'>
-			</div>
+			</section>
+
+			<section id="video" data-video-id="<?php echo $_GET['v']; ?>">
+				<video controls autoplay>
+					<source 
+						src="<?php echo BASE_URL; ?>uploads/<?php echo $_GET['v']; ?>.mp4" type="video/mp4">
+				</video>	
+			</section>
 		
-			<div id='videos'></div>
+			<section id="alsoLike">
+				<h2>You might also like...</h2>
+			</section>
+
+			<section id="videos">
+			</section>
 		</main>
 
 		<footer>
@@ -43,6 +50,6 @@ if (isset($_SESSION['userId']))
 		<!-- Google API -->
 		<script src='https://apis.google.com/js/api.js'></script>
 		<!-- JS for this page -->
-		<script type='module' src='<?php echo BASE_URL; ?>js/index.js'></script>
+		<script type='module' src='<?php echo BASE_URL; ?>js/watch.js'></script>
 	</body>
 </html>

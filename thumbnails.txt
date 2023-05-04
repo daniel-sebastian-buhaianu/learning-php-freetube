@@ -1,0 +1,6 @@
+https://i.ytimg.com/vi/youtube_video_id/default.jpg - default
+
+https://i.ytimg.com/vi/youtube_video_id/mqdefault.jpg - medium
+
+https://i.ytimg.com/vi/youtube_video_id/hqdefault.jpg - high
+

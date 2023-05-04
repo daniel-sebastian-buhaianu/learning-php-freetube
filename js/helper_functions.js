@@ -35,7 +35,7 @@ const sendDataToServer= async (data, url) => {
 	return response;
 };
 
-const createVideosArray = (response) => {
+const createVideosArrayFromGapiResponse = (response) => {
 	// create videos array from response object
 	// each item in array will have an id, title and thumbnails
 	const videos = response.result.items.map(item => {
@@ -49,7 +49,7 @@ const createVideosArray = (response) => {
 	return videos;
 };
 
-const getVideos = async (searchQuery) => {
+const getVideosFromGapi = async (searchQuery) => {
 	// search youtube videos and display 6 results 
 	const response = await gapi.client.youtube.search.list({
 		'part': [ 'snippet' ],
@@ -204,8 +204,8 @@ const memoizeSearchVideos = () => {
 export {
 	getDataFromServer,
 	sendDataToServer,
-	createVideosArray,
-	getVideos,
+	createVideosArrayFromGapiResponse,
+	getVideosFromGapi,
 	decodeHTMLEntities,
 	createVideoCard,
 	getValueFromElement,

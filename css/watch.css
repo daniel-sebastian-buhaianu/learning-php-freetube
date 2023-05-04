@@ -1,0 +1,51 @@
+* { margin: 0; padding: 0; }
+
+h1 { font-size: 1.5em; }
+
+h2 { font-size: 1.2em; }
+
+header { 
+	display: flex; 
+	justify-content: space-between; 
+	align-items: center;
+	padding: 0.5rem;
+}
+
+#logo { cursor: pointer };
+
+nav > p { color: blue; text-decoration: underline; }
+
+main { margin-top: 1rem; display: flex; flex-direction: column; align-items: center}
+
+#searchWrapper { width: 100%; display: flex; justify-content: center; }
+
+#searchBar { width: 70%; height: 1.5rem; padding: 0.5rem; }
+
+#searchBtn { width: 65px; }
+
+#video > video { width: 100%; margin-top: 1rem; }
+
+#alsoLike { margin-top: 2rem; }
+
+#videos { width: 100%; }
+
+.video { 
+	width: 100%; 
+	margin-top: 1rem; 
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.video > img { width: 100%; }
+
+.video > p { width: 90%; margin-top: 0.5rem; text-align: center; }
+
+footer { margin-top: 1.5rem; margin-bottom: 0.5rem;}
+
+footer > a {
+	display: block;
+	text-align: center;
+}
+
+footer > a:visited { color: blue; }
