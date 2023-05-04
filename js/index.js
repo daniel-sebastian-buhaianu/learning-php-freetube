@@ -15,7 +15,7 @@ const applyJS = () => {
 	const handleSearch = (searchFunc) => {
 		const searchQuery = getValueFromElement(document.getElementById('search_query'));
 		
-		searchFunc(searchQuery, 'php/get_videos.php').then(videos => {
+		searchFunc(searchQuery, 'php/get_yt_videos.php').then(videos => {
 			
 			const divWrapper = document.getElementById('search_results');
 			removeFirstChildFromParent(divWrapper);

@@ -8,7 +8,7 @@ if (isset($_GET['search_query']))
 	// prevent from malicious code injection
 	$search_query = htmlentities($_GET['search_query'], ENT_QUOTES);
 
-	$videos = getYtVideosByTitle($search_query);
+	$videos = getYoutubeVideosByTitle($search_query);
 
 	// send videos array to client (json encoded)
 	echo json_encode($videos);

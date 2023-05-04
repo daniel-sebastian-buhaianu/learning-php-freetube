@@ -25,7 +25,7 @@ const applyJS = () => {
 			let i = 0;
 			for (let btn of cardBtns)
 			{
-				const windowLocation = `upload.php?videoId=${videos[i]['id']}`;
+				const windowLocation = `upload.php?videoId=${videos[i]['yt_id']}`;
 				btn.addEventListener('click', () => {
 					window.location = windowLocation;
 				});

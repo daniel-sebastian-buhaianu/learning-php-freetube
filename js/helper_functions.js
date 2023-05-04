@@ -78,9 +78,9 @@ const decodeHTMLEntities = (str) => {
 };
 
 const createVideoCard = (videoData, videoLink = 'https://www.ssyoutube.com/watch?v=') => {
-	const { id, thumbnails } = videoData;
+	const { yt_id, thumbnails } = videoData;
 	const title = decodeHTMLEntities(videoData['title']);
-	const downloadVideoLink = videoLink + id;
+	const downloadVideoLink = videoLink + yt_id;
 
 	const videoCard = createDivWithClass('video_card');
 

@@ -135,21 +135,21 @@ function loginUser($email)
 	header('Location: '.BASE_URL.'home.php');
 }
 
-function getYtVideosByTitle($str)
+function getYoutubeVideosByTitle($str)
 {
 	global $mysqli;
 
 	$param = '%' . $str . '%';
-	$stmt = $mysqli->prepare('SELECT id, title FROM videos WHERE title LIKE ?');
+	$stmt = $mysqli->prepare('SELECT yt_id, title FROM videos WHERE title LIKE ? AND yt_id IS NOT NULL');
 	$stmt->bind_param('s', $param);
 	$stmt->execute();
-	$stmt->bind_result($id, $title);
+	$stmt->bind_result($yt_id, $title);
 	
 	// store results in array
 	$videos = array();
 	$index = 0;
 	while ($stmt->fetch()) {
-		$videos[$index]['id'] = $id;
+		$videos[$index]['yt_id'] = $yt_id;
 		$videos[$index]['title'] = $title;
 		$index++;
 	}
@@ -158,9 +158,9 @@ function getYtVideosByTitle($str)
 	// now we need to get the thumbnails for each video
 	for ($i = 0; $i < $index; $i++)
 	{
-		$video_id = $videos[$i]['id'];
+		$video_id = $videos[$i]['yt_id'];
 
-		$stmt = $mysqli->prepare('SELECT src_default, src_high, src_medium FROM video_thumbnails WHERE id = ?');
+		$stmt = $mysqli->prepare('SELECT src_default, src_high, src_medium FROM video_thumbnails WHERE yt_id = ?');
 		$stmt->bind_param('s', $video_id);
 		$stmt->execute();
 		$stmt->bind_result($src_default, $src_high, $src_medium);
@@ -181,16 +181,17 @@ function getVideosUploadedByUser($userId)
 {
 	global $mysqli;
 
-	$stmt = $mysqli->prepare('SELECT id, title FROM videos WHERE uploaded_by=?');
+	$stmt = $mysqli->prepare('SELECT id, yt_id, title FROM videos WHERE uploaded_by=?');
 	$stmt->bind_param('i', $userId);
 	$stmt->execute();
-	$stmt->bind_result($id, $title);
+	$stmt->bind_result($id, $yt_id, $title);
 	
 	// store results in array
 	$videos = array();
 	$index = 0;
 	while ($stmt->fetch()) {
 		$videos[$index]['id'] = $id;
+		$videos[$index]['yt_id'] = $yt_id;
 		$videos[$index]['title'] = $title;
 		$index++;
 	}
@@ -218,7 +219,7 @@ function getVideosUploadedByUser($userId)
 	return $videos;
 }
 
-function addVideosToDatabase($videos)
+function addYoutubeVideosToDatabase($videos)
 {
 	global $mysqli;
 
@@ -234,7 +235,7 @@ function addVideosToDatabase($videos)
      $img_src_medium = $video['thumbnails']['medium']['url'];
 
      // check if video is in db
-     $stmt = $mysqli->prepare('SELECT id FROM videos WHERE id = ?');
+     $stmt = $mysqli->prepare('SELECT id FROM videos WHERE yt_id = ?');
      $stmt->bind_param('s', $id);
      $stmt->execute();
      $stmt->store_result();
@@ -247,7 +248,7 @@ function addVideosToDatabase($videos)
      else
      {
         // add video id, title to videos table
-        $stmt = $mysqli->prepare('INSERT videos (id, title) VALUES (?,?)');
+        $stmt = $mysqli->prepare('INSERT videos (yt_id, title) VALUES (?,?)');
         $stmt->bind_param('ss', $id, $title);
         $stmt->execute();
         $stmt->close();
@@ -264,14 +265,19 @@ function addVideosToDatabase($videos)
   }
 }
 
-function countWords($str)
+function getWordsFromString($str)
 {
 	$words = array();
+	$specialWords = ["039", "quot"];
 	$tok = strtok($str, " ,;?!-|.@*%#$^&()'\":_+/\\><~`");
 	
 	while ($tok !== false)
 	{
-		$words[] = $tok;
+		if (!in_array($tok, $specialWords))
+		{
+			$words[] = $tok;
+		}
+
 		$tok = strtok(" ,;?!-|.@*%#$^&()'\":_+/\\><~`");
 	}
 	
@@ -281,8 +287,8 @@ function countWords($str)
 function calcStringEquality($string1, $string2)
 {
 
-	$str1 = countWords($string1);
-	$str2 = countWords($string2);
+	$str1 = getWordsFromString($string1);
+	$str2 = getWordsFromString($string2);
 
 	$i = 0; 
 	$j = 0; 
@@ -310,5 +316,30 @@ function calcStringEquality($string1, $string2)
 	return $equalityFactor;
 }
 
+function deleteFromTableById($tableName, $id)
+{
+	global $mysqli;
 
+	$query = 'DELETE FROM ' . $tableName . ' WHERE id=?';
+
+	$stmt = $mysqli->prepare($query);
+	$stmt->bind_param('i', $id);
+	$stmt->execute();
+	$stmt->close();
+}
+
+function whereTitleLikeString($str)
+{
+	$words = getWordsFromString($str);
+	$condition = "WHERE title LIKE '%$words[0]%' ";
+	
+	$len = count($words);
+	for ($i = 1; $i < $len; $i++)
+	{
+		$condition .= "AND title LIKE '%$words[$i]% '";
+	}
+
+	return $condition;
+
+}
 ?>
