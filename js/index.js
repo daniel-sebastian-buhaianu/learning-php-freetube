@@ -1,100 +1,22 @@
-// import {
-// 	getValueFromElement,
-// 	memoizeSearchVideos,
-// 	removeFirstChildFromParent,
-// 	displayVideos,
-// 	initGapiClient,
-// 	loadGapiClient,
-
-// } from './helper_functions.js';
-
-
-// // Main
-// const applyJS = () => {
-
-// 	const handleSearch = (searchFunc) => {
-// 		const searchQuery = getValueFromElement(document.getElementById('search_query'));
-		
-// 		searchFunc(searchQuery, 'php/get_yt_videos.php').then(videos => {
-			
-// 			const divWrapper = document.getElementById('search_results');
-// 			removeFirstChildFromParent(divWrapper);
-// 			displayVideos(videos, divWrapper, false);
-
-// 			const cardBtns = document.getElementsByClassName('card_btn');
-// 			for (let btn of cardBtns)
-// 			{
-// 				btn.addEventListener('click', () => alert('To download videos, you need to log in.'));
-// 			}
-// 		});
-
-
-// 	};
-
-// 	const handleCardBtnClick = (event) => {
-// 		alert('To download any video, please log in.');
-// 	}
-
-// 	const addEventListeners = () => {
-
-// 		const searchFunc = memoizeSearchVideos();
-// 		document.getElementById('search_btn').addEventListener('click', () => handleSearch(searchFunc));
-		
-// 		document.getElementById('search_query').addEventListener('keydown', (event) => {
-// 		if (event.keyCode === 13)
-// 		{
-// 			return handleSearch(searchFunc);
-// 		}
-// 	});
-
-		
-
-// 	}
-
-// 	addEventListeners();	
-
-// };
-
-// gapi.load('client', () => {
-// 	initGapiClient()
-// 		.then(loadGapiClient())
-// 			.then(applyJS);
-// })
-
 import {
-	getDataFromServer,
-	decodeHTMLEntities,
+	loadGapi,
+	displayNVideosForGuests,
+
 } from './helper_functions.js';
 
-const BASE_URL = 'http://localhost/spotube/';
+import { Logo } from './logo.component.js';
+import { SearchBar } from './searchBar.component.js';
+import { SignIn } from './signIn.component.js';
 
-const displayVideos = (videos) => {
+const main = () => {
 
-	const wrapper = document.getElementById('videos');
+	displayNVideosForGuests(10);
 
-	for (let video of videos)
-	{
-		const div = document.createElement('div');
-		div.setAttribute('class', 'video');
+	SearchBar();
 
-		const img = document.createElement('img');
-		img.setAttribute('src', `https://i.ytimg.com/vi/${video['yt_id']}/mqdefault.jpg`);
+	Logo();
 
-		const p = document.createElement('p');
-		const title = decodeHTMLEntities(video['title']);
-		p.appendChild(document.createTextNode(title));
+	SignIn();
+};
 
-		div.appendChild(img);
-		div.appendChild(p);
-		div.addEventListener('click', () => {
-			window.location.href = BASE_URL + `watch.php?v=${video['id']}`;
-		});
-		wrapper.appendChild(div);
-	}
-}
-
-getDataFromServer('php/get_videos.php?fromId=1&count=3')
-	.then(
-		response => displayVideos(response), 
-		error => console.log('error', error)
-	);
+loadGapi(main);

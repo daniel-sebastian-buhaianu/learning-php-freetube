@@ -3,24 +3,33 @@ import { googleApiKey } from './config.js';
 
 // Global variables
 const youtubeApiUrl = 'https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest';
-
+const BASE_URL = 'http://localhost/spotube/';
 
 
 const initGapiClient = async () => {
 	const response = await gapi.client.init({ 'apiKey': googleApiKey });
 	return response;
-}
+};
 
 const loadGapiClient = async () => {
 	const response = await gapi.client.load(youtubeApiUrl);
 	return response;
-}
+};
+
+const loadGapi = (cb) => {
+	// Load Google API, then run callback fn
+	gapi.load('client', () => {
+		initGapiClient()
+			.then(loadGapiClient())
+				.then(cb);
+	});
+};
 
 const getDataFromServer = async (url) => {
 		const response = await fetch(url);
 		const jsonData = await response.json();
 		return jsonData;
-	};
+};
 
 const sendDataToServer= async (data, url) => {
 	let params = {
@@ -38,11 +47,13 @@ const sendDataToServer= async (data, url) => {
 const createVideosArrayFromGapiResponse = (response) => {
 	// create videos array from response object
 	// each item in array will have an id, title and thumbnails
-	const videos = response.result.items.map(item => {
+
+	const filteredResp = response.result.items.filter(item => item.id.videoId !== undefined);
+
+	const videos = filteredResp.map(item => {
 		return {
 			id: item.id.videoId,
 			title: item.snippet.title,
-			thumbnails: item.snippet.thumbnails
 		};
 	});
 	
@@ -50,13 +61,15 @@ const createVideosArrayFromGapiResponse = (response) => {
 };
 
 const getVideosFromGapi = async (searchQuery) => {
-	// search youtube videos and display 6 results 
 	const response = await gapi.client.youtube.search.list({
 		'part': [ 'snippet' ],
-		'maxResults': 6,
+		'maxResults': 10,
 		'q': searchQuery
 	});
-	return response;
+
+	const videos = createVideosArrayFromGapiResponse(response);
+
+	return videos;
 };
 
 const decodeHTMLEntities = (str) => {
@@ -77,88 +90,8 @@ const decodeHTMLEntities = (str) => {
 	return str;
 };
 
-const createVideoCard = (videoData, videoLink = 'https://www.ssyoutube.com/watch?v=') => {
-	const { yt_id, thumbnails } = videoData;
-	const title = decodeHTMLEntities(videoData['title']);
-	const downloadVideoLink = videoLink + yt_id;
-
-	const videoCard = createDivWithClass('video_card');
-
-	const cardImg = createImgWithClass('card_image', thumbnails['medium']);
-
-	const cardTitle = createParagraphWithText(title);
-	cardTitle.setAttribute('class', 'card_title');
-
-	const cardBtn = createATagWithClass('card_btn', downloadVideoLink, 'Download');
-	cardBtn.setAttribute('target', '_sfn');
-
-	videoCard.appendChild(cardImg);
-	videoCard.appendChild(cardTitle);
-	videoCard.appendChild(cardBtn);
-	
-	return videoCard;
-};
-
 const getValueFromElement = (element) => {
 		return element.value;
-};
-
-const createParagraphWithText = (text) => {
-	const p = document.createElement('p');
-	const textNode = document.createTextNode(text);
-	p.appendChild(textNode);
-
-	return p;
-};
-
-const createDivWithClass = (className) => {
-	const div = document.createElement('div');
-	div.setAttribute('class', className);
-	return div;
-};
-
-const createImgWithClass = (className, src) => {
-	const img = document.createElement('img');
-	img.setAttribute('class', className);
-	img.setAttribute('src', src);
-	return img;
-};
-
-const createButtonWithClass = (className, text) => {
-	const btn = document.createElement('button');
-	btn.setAttribute('class', className);
-	btn.appendChild(document.createTextNode(text));
-	return btn;
-};
-
-const createATagWithClass = (className, link, text) => {
-	const aTag = document.createElement('a');
-	aTag.setAttribute('class', className);
-	aTag.setAttribute('href', link);
-	aTag.appendChild(document.createTextNode(text));
-	return aTag;
-};
-
-
-const displayVideos = (videos, htmlParentNode, clickable = true) => {
-
-	if (videos.length === 0)
-	{
-		const p = createParagraphWithText('No results');
-		htmlParentNode.appendChild(p);
-	}
-	else
-	{
-		const videoCards = createDivWithClass('video_cards');
-
-		for (let video of videos)
-		{
-			const videoCard = clickable ? createVideoCard(video) : createVideoCard(video, '#');
-			videoCards.appendChild(videoCard);
-		}
-
-		htmlParentNode.appendChild(videoCards);
-	}
 };
 
 const removeFirstChildFromParent = (htmlParentNode) => {
@@ -166,54 +99,86 @@ const removeFirstChildFromParent = (htmlParentNode) => {
 	{
 		htmlParentNode.removeChild(htmlParentNode.firstElementChild);
 	}
+	return htmlParentNode;
 };
 
-const memoizeSearchVideos = () => {
-	let cache = {};
-	let previousQuery = null;
+const removeChildrenFromParent = (htmlParentNode) => {
+	while (htmlParentNode.childElementCount > 0)
+	{
+		htmlParentNode = removeFirstChildFromParent(htmlParentNode);
+	}
+};
 
-	return async (searchQuery, pathToGetVideosHandler) => {
+const displayVideosForGuests = (videos) => {
 
-		if (previousQuery !== searchQuery)
+	const wrapper = document.getElementById('videos');
+
+	for (let video of videos)
+	{
+		const div = document.createElement('div');
+		div.setAttribute('class', 'video');
+
+		const img = document.createElement('img');
+		img.setAttribute('src', `https://i.ytimg.com/vi/${video['id']}/mqdefault.jpg`);
+		img.style.opacity = video['uploaded_by'] === null ? 0.5 : 1;
+
+		const p = document.createElement('p');
+		const title = decodeHTMLEntities(video['title']);
+		p.appendChild(document.createTextNode(title));
+
+		div.appendChild(img);
+		div.appendChild(p);
+
+		if (video['uploaded_by'] === null)
 		{
+			const unavailable = document.createElement('div');
+			unavailable.setAttribute('class', 'unavailable');
 
-			if (searchQuery in cache)
+			const span = document.createElement('span');
+			span.appendChild(document.createTextNode('Members Only'))
+
+			unavailable.appendChild(span);
+			div.appendChild(unavailable);
+		}
+
+		div.addEventListener('click', () => {
+
+			if (video['uploaded_by'] === null)
 			{
-				previousQuery = searchQuery;
-				return cache[searchQuery];						
+				alert('Sorry, you need to sign in to watch this video');
 			}
 			else
 			{
-				return getDataFromServer(`${pathToGetVideosHandler}?search_query=${searchQuery}`)
-					.then(videos => {
-						cache[searchQuery] = videos;
-						previousQuery = searchQuery;
-						return videos;
-					});
+				window.location.href = BASE_URL + `watch.php?v=${video['id']}`;
 			}
-		}
-		else
-		{
-			return cache[previousQuery];
-		}
+		});
 
-		
-	};
+		wrapper.appendChild(div);
+	}
 };
 
+const displayNVideosForGuests = (n, exclude=' ') => {
+	getDataFromServer(`php/get_videos.php?count=${n}&exclude=${exclude}`)
+		.then(
+			response => displayVideosForGuests(response), 
+			error => console.log('error', error)
+	);
+};
+
+
 export {
+	BASE_URL,
+	loadGapi,
 	getDataFromServer,
 	sendDataToServer,
 	createVideosArrayFromGapiResponse,
 	getVideosFromGapi,
 	decodeHTMLEntities,
-	createVideoCard,
 	getValueFromElement,
-	createParagraphWithText,
-	createDivWithClass,
-	displayVideos,
 	removeFirstChildFromParent,
-	memoizeSearchVideos,
+	removeChildrenFromParent,
 	initGapiClient,
 	loadGapiClient,
+	displayVideosForGuests,
+	displayNVideosForGuests,
 };

@@ -1,4 +1,4 @@
-<?php 
+	<?php 
 
 require_once('php/config.php'); 
 session_start(); 
@@ -11,6 +11,7 @@ session_start();
 		<meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>FreeTube</title>
+		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/layout.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/watch.css">
 	</head>
 
@@ -18,7 +19,7 @@ session_start();
 		<header>
 			<h1 id="logo">FreeTube</h1>
 			<nav>
-				<p>Sign In<p>
+				<p id="signIn">Sign In<p>
 			</nav>
 		</header>
 

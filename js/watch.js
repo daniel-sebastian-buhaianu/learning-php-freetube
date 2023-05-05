@@ -1,44 +1,24 @@
 import {
-	getDataFromServer,
-	decodeHTMLEntities,
+	loadGapi, 
+	displayNVideosForGuests,
+
 } from './helper_functions.js';
 
-const BASE_URL = 'http://localhost/spotube/';
+import { Logo } from './logo.component.js';
+import { SearchBar } from './searchBar.component.js';
+import { SignIn } from './signIn.component.js';
 
-const displayVideos = (videos) => {
+const main = () => {
 
-	const wrapper = document.getElementById('videos');
+	const video = document.getElementById('video');
+	const videoId = video.dataset.videoId;
+	displayNVideosForGuests(10, videoId);
 
-	for (let video of videos)
-	{
-		const div = document.createElement('div');
-		div.setAttribute('class', 'video');
+	SearchBar();
 
-		const img = document.createElement('img');
-		img.setAttribute('src', `https://i.ytimg.com/vi/${video['yt_id']}/mqdefault.jpg`);
+	Logo();
 
-		const p = document.createElement('p');
-		const title = decodeHTMLEntities(video['title']);
-		p.appendChild(document.createTextNode(title));
+	SignIn();
+};
 
-		div.appendChild(img);
-		div.appendChild(p);
-		div.addEventListener('click', () => {
-			window.location.href = BASE_URL + `watch.php?v=${video['id']}`;
-		});
-		wrapper.appendChild(div);
-	}
-}
-
-const video = document.getElementById('video');
-const videoId = video.dataset.videoId;
-getDataFromServer(`php/get_videos.php?fromId=1&count=5&exclude=${videoId}`)
-	.then(
-		response => displayVideos(response), 
-		error => console.log('error', error)
-	);
-
-const logo = document.getElementById('logo');
-logo.addEventListener('click', () => {
-	window.location.href = BASE_URL;
-});
+loadGapi(main);

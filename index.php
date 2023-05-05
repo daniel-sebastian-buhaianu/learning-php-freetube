@@ -16,6 +16,7 @@ if (isset($_SESSION['userId']))
 		<meta charset="utf-8">
     	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>FreeTube</title>
+		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/layout.css">
 		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/index.css">
 	</head>
 
@@ -23,17 +24,17 @@ if (isset($_SESSION['userId']))
 		<header>
 			<h1 id="logo">FreeTube</h1>
 			<nav>
-				<p>Sign In<p>
+				<p id="signIn">Sign In<p>
 			</nav>
 		</header>
 
 		<main>
-			<div id='searchWrapper'>
+			<section id='searchWrapper'>
 				<input id ='searchBar' type='text' name='searchBar' placeholder='search youtube videos...'>
 				<input id='searchBtn' type='submit' value='Search'>
-			</div>
+			</section>
 		
-			<div id='videos'></div>
+			<section id='videos'></section>
 		</main>
 
 		<footer>

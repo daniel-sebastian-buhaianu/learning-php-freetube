@@ -3,32 +3,44 @@
 require_once('config.php');
 require_once('db.php');
 
-if (isset($_GET['fromId']) && isset($_GET['count']))
+if (isset($_GET['count']))
 {
-	$fromId = $_GET['fromId'];
 	$count = $_GET['count'];
-	$excludedVideo = 0;
+	$excludedVideo = '% %';
+	$like = '% %';
 
 	if (isset($_GET['exclude']))
 	{
-		$excludedVideo = $_GET['exclude'];
+		$excludedVideo = '%' . $_GET['exclude'] . '%';
+	}
+
+	if (isset($_GET['like']))
+	{
+		$like = '%' . $_GET['like'] . '%';
 	}
 
 	$videos = array();
 
-	$stmt = $mysqli->prepare('SELECT id, yt_id, title FROM videos WHERE id >= ? AND id <> ? AND uploaded_by IS NOT NULL LIMIT ?');
-	$stmt->bind_param("iii", $fromId, $excludedVideo, $count);
+	$stmt = $mysqli->prepare(
+		'SELECT id, title, uploaded_by 
+			FROM videos 
+				WHERE id NOT IN (?)
+				AND title LIKE ?
+				ORDER BY rand() 
+				LIMIT ?');
+
+	$stmt->bind_param("ssi", $excludedVideo, $like, $count);
 	$stmt->execute();
 	$stmt->store_result();
-	$stmt->bind_result($id, $yt_id, $title);
+	$stmt->bind_result($id, $title, $uploaded_by);
 	if ($stmt->num_rows > 0)
 	{
 		$index = 0;
 		while ($stmt->fetch())
 		{
 			$videos[$index]['id'] = $id;
-			$videos[$index]['yt_id'] = $yt_id;
 			$videos[$index]['title'] = $title;
+			$videos[$index]['uploaded_by'] = $uploaded_by;
 			$index++;
 		}
 	}

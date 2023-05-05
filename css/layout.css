@@ -1,0 +1,72 @@
+* { margin: 0; padding: 0; }
+
+h1 { font-size: 1.5em; }
+
+a:visited { color: blue; }
+
+header { 
+	display: flex; 
+	justify-content: space-between; 
+	align-items: center;
+	padding: 0.5rem;
+}
+
+#logo { cursor: pointer }
+
+nav > p { color: blue; text-decoration: underline; cursor: pointer; }
+
+main { margin-top: 1rem; display: flex; flex-direction: column; align-items: center}
+
+#searchWrapper { width: 100%; display: flex; justify-content: center; }
+
+#searchBar { 
+	width: 70%; 
+	height: 1.5rem; 
+	padding: 0.5rem; 
+	border: 1px solid rgba(0,0,0,0.5);
+	border-radius: 0.5em 0 0 0.5em;
+	outline: none;
+}
+
+#searchBtn { 
+	width: 65px; 
+	background: black; 
+	color: white; 
+	border: 1px solid black;
+	border-radius: 0 0.5em 0.5em 0;
+}
+
+#videos { width: 100%; }
+
+.video {
+	position: relative; 
+	width: 100%; 
+	margin-top: 1rem; 
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.video > img { width: 100%; }
+
+.video > p { width: 90%; margin-top: 0.5rem; text-align: center; }
+
+.video > .unavailable {
+	position: absolute;
+	top: 0;
+	right: 0;
+	background: rgba(255, 0, 0, 0.7);
+	color: white;
+	font-size: 0.9em;
+	box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+	padding: 0.1em;
+}
+
+footer { margin-top: 1.5rem; margin-bottom: 0.5rem;}
+
+footer > a {
+	display: block;
+	text-align: center;
+}
+
+footer > a:visited { color: blue; }

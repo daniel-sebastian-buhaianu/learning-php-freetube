@@ -154,26 +154,7 @@ function getYoutubeVideosByTitle($str)
 		$index++;
 	}
 	$stmt->close();
-
-	// now we need to get the thumbnails for each video
-	for ($i = 0; $i < $index; $i++)
-	{
-		$video_id = $videos[$i]['yt_id'];
-
-		$stmt = $mysqli->prepare('SELECT src_default, src_high, src_medium FROM video_thumbnails WHERE yt_id = ?');
-		$stmt->bind_param('s', $video_id);
-		$stmt->execute();
-		$stmt->bind_result($src_default, $src_high, $src_medium);
-		$stmt->fetch();
-
-		$videos[$i]['thumbnails'] = array();
-		$videos[$i]['thumbnails']['default'] = $src_default;
-		$videos[$i]['thumbnails']['high'] = $src_high;
-		$videos[$i]['thumbnails']['medium'] = $src_medium;
-
-		$stmt->close();
-	}
-
+	
 	return $videos;
 }
 
@@ -217,52 +198,6 @@ function getVideosUploadedByUser($userId)
 	}
 
 	return $videos;
-}
-
-function addYoutubeVideosToDatabase($videos)
-{
-	global $mysqli;
-
-  // Iterate array of videos 
-  // and add to database if it doesn't already exist
-  for ($i = 0, $n = count($videos); $i < $n ; $i++)
-  {
-  	 $video = $videos[$i];
-     $id = $video['id'];
-     $title = $video['title'];
-     $img_src_default = $video['thumbnails']['default']['url'];
-     $img_src_high = $video['thumbnails']['high']['url'];
-     $img_src_medium = $video['thumbnails']['medium']['url'];
-
-     // check if video is in db
-     $stmt = $mysqli->prepare('SELECT id FROM videos WHERE yt_id = ?');
-     $stmt->bind_param('s', $id);
-     $stmt->execute();
-     $stmt->store_result();
-     if($stmt->num_rows != 0)
-     {
-        // video is already in db
-        echo "video already in db \r\n";
-     }
-     // if it's not in db, then add it
-     else
-     {
-        // add video id, title to videos table
-        $stmt = $mysqli->prepare('INSERT videos (yt_id, title) VALUES (?,?)');
-        $stmt->bind_param('ss', $id, $title);
-        $stmt->execute();
-        $stmt->close();
-
-        // add thumbnail images' src to video_thumbnails table
-        $stmt = $mysqli->prepare('INSERT video_thumbnails (id, src_default, src_high, src_medium) VALUES (?,?,?,?)');
-        $stmt->bind_param('ssss', $id, $img_src_default, $img_src_high, $img_src_medium);
-        $stmt->execute();
-        $stmt->close();
-
-        // provide feedback
-        echo "video added successfully \r\n";
-     }
-  }
 }
 
 function getWordsFromString($str)
