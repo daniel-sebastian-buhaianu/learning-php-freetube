@@ -1,15 +1,3 @@
-<?php 
-
-require_once('php/config.php');
-session_start(); 
-
-if (!isset($_SESSION['userId']))
-{
-	header('Location: '.BASE_URL.'index.php');
-}
-
-?>
-
 <!DOCTYPE html>
 <html>
 <head>

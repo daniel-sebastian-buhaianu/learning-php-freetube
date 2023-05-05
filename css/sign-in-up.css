@@ -30,3 +30,14 @@ form > label { padding-left: 0; margin-left: -0.5rem; }
 	margin-top: 1rem;
 	cursor: pointer;
 }
+
+.form-alert {
+	background: #db0707;
+	color: white;
+}
+
+.form-error {
+	color: #db0707;
+	margin-left: -0.5rem;
+	padding-left: 0;
+}

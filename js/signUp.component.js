@@ -4,7 +4,7 @@ const SignUp = () => {
 	const signUpBtn = document.getElementById('signUp');
 
 	signUpBtn.addEventListener('click', () => {
-		window.location.href = BASE_URL + 'sign-up.php';
+		window.location.href = BASE_URL + 'signup.php';
 	});
 };
 

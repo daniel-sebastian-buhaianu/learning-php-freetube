@@ -1,5 +1,3 @@
-<?php require_once('php/config.php'); session_start(); ?>
-
 <!DOCTYPE html>
 <html lang='en'>
 <head>
@@ -21,16 +19,35 @@
 
 		<section id="form">
 			<h1>Sign In</h1>
-			<form name='signUp' action='<?php echo BASE_URL ?>php/check_signUp.php' method='post'>
+			<form name='signUp' method='post'>
+				<?php 
+					if ($error['alert'] != '')
+					{
+						echo "<div class='form-alert'>" . $error['alert'] . "</div>";
+					}
+				?>
+
 				<label for="email">Email</label>
-				<input type='email' name='email' placeholder="Email">
+				<input type='email' name='email' placeholder="Email" value="<?php echo $input['email']; ?>">
+				<?php 
+					if ($error['email'] != '')
+					{
+						echo "<div class='form-error'>" . $error['email'] . "</div>";
+					}
+				?>
 				
 				<label for="password">Password</label>
-				<input type='password' name='password' placeholder="Password">
+				<input type='password' name='password' placeholder="Password" value="<?php echo $input['password']; ?>">
+				<?php 
+					if ($error['password'] != '')
+					{
+						echo "<div class='form-error'>" . $error['password'] . "</div>";
+					}
+				?>
 
 				<input id="signBtn" type='submit' name='signIn' value='Sign In'>
 
-				<p>Don't have an account? <a href='<?php echo BASE_URL ?>sign-up.php'>Sign Up</a></p>
+				<p>Don't have an account? <a href='<?php echo BASE_URL ?>signup.php'>Sign Up</a></p>
 			</form>
 		</section>
 		

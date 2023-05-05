@@ -1,10 +1,3 @@
-	<?php 
-
-require_once('php/config.php'); 
-session_start(); 
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -12,7 +5,7 @@ session_start();
     	<meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>FreeTube</title>
 		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/layout.css">
-		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/watch.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/index.css">
 	</head>
 
 	<body>
@@ -28,20 +21,8 @@ session_start();
 				<input id ='searchBar' type='text' name='searchBar' placeholder='search youtube videos...'>
 				<input id='searchBtn' type='submit' value='Search'>
 			</section>
-
-			<section id="video" data-video-id="<?php echo $_GET['v']; ?>">
-				<video controls autoplay>
-					<source 
-						src="<?php echo BASE_URL; ?>uploads/<?php echo $_GET['v']; ?>.mp4" type="video/mp4">
-				</video>	
-			</section>
 		
-			<section id="alsoLike">
-				<h2>You might also like...</h2>
-			</section>
-
-			<section id="videos">
-			</section>
+			<section id='videos'></section>
 		</main>
 
 		<footer>
@@ -51,6 +32,6 @@ session_start();
 		<!-- Google API -->
 		<script src='https://apis.google.com/js/api.js'></script>
 		<!-- JS for this page -->
-		<script type='module' src='<?php echo BASE_URL; ?>js/watch.js'></script>
+		<script type='module' src='<?php echo BASE_URL; ?>js/index.js'></script>
 	</body>
 </html>
