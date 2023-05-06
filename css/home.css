@@ -1,6 +1,0 @@
-#videosDownloaded > h3,
-#videosNotDownloaded >h3 {
-	margin-top: 1rem;
-	margin-left: 0.5rem;
-	text-decoration: underline;
-}

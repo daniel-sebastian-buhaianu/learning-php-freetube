@@ -22,7 +22,14 @@
 				<input id='searchBtn' type='submit' value='Search'>
 			</section>
 		
-			<section id="videos">
+			<section id="videosDownloaded">
+				<h3>Videos You Can Watch Now</h3>
+			</section>
+
+
+			<section id="videosNotDownloaded">
+				<h3>Videos You Can Download</h3>
+			</section>
 		</main>
 
 		<footer>

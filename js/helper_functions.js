@@ -160,7 +160,7 @@ const displayVideos= (videos, elemWhereToDisplay, isMember=0) => {
 };
 
 const displayNVideos = (n, elemWhereToDisplay, isMember=0, uploaded=null, exclude='') => {
-	getDataFromServer(`php/get_videos.php?count=${n}&exclude=${exclude}&isMember=${isMember}&uploaded=${uploaded}`)
+	getDataFromServer(`php/get_videos.php?count=${n}&exclude=${exclude}&uploaded=${uploaded}`)
 		.then(
 			response => displayVideos(response, elemWhereToDisplay, isMember), 
 			error => console.log('error', error)

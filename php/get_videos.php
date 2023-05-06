@@ -6,7 +6,6 @@ require_once('db.php');
 $count = 10;
 $excludedVideo = '';
 $like = '% %';
-$isMember = 0;
 $uploaded = null;
 
 $videos = array();
@@ -26,17 +25,36 @@ if (isset($_GET['like']))
 	$like = '%' . $_GET['like'] . '%';
 }
 
-if (isset($_GET['isMember']))
-{
-	$isMember = $_GET['isMember'];
-}
 if (isset($_GET['uploaded']))
 {
 	$uploaded = $_GET['uploaded'];
 }
 
 $stmt = null;
-if (!$isMember)
+
+if ($uploaded == 1)
+{
+	$stmt = $mysqli->prepare(
+		'SELECT id, title, uploaded_by 
+			FROM videos 
+				WHERE id NOT IN (?)
+				AND title LIKE ?
+				AND uploaded_by IS NOT NULL
+				ORDER BY rand() 
+				LIMIT ?');
+}
+else if ($uploaded == 0)
+{
+	$stmt = $mysqli->prepare(
+		'SELECT id, title, uploaded_by 
+			FROM videos 
+				WHERE id NOT IN (?)
+				AND title LIKE ?
+				AND uploaded_by IS NULL
+				ORDER BY rand() 
+				LIMIT ?');
+}
+else
 {
 	$stmt = $mysqli->prepare(
 		'SELECT id, title, uploaded_by 
@@ -46,41 +64,7 @@ if (!$isMember)
 				ORDER BY rand() 
 				LIMIT ?');
 }
-else
-{
-	if ($uploaded == 1)
-	{
-		$stmt = $mysqli->prepare(
-			'SELECT id, title, uploaded_by 
-				FROM videos 
-					WHERE id NOT IN (?)
-					AND title LIKE ?
-					AND uploaded_by IS NOT NULL
-					ORDER BY rand() 
-					LIMIT ?');
-	}
-	else if ($uploaded == 0)
-	{
-		$stmt = $mysqli->prepare(
-			'SELECT id, title, uploaded_by 
-				FROM videos 
-					WHERE id NOT IN (?)
-					AND title LIKE ?
-					AND uploaded_by IS NULL
-					ORDER BY rand() 
-					LIMIT ?');
-	}
-	else
-	{
-		$stmt = $mysqli->prepare(
-			'SELECT id, title, uploaded_by 
-				FROM videos 
-					WHERE id NOT IN (?)
-					AND title LIKE ?
-					ORDER BY rand() 
-					LIMIT ?');
-	}
-}
+
 $stmt->bind_param("ssi", $excludedVideo, $like, $count);
 $stmt->execute();
 $stmt->store_result();
