@@ -12,7 +12,16 @@
 		<header>
 			<h1 id="logo">FreeTube</h1>
 			<nav>
-				<p id="signIn">Sign In<p>
+				<?php
+					if ($isMember)
+					{
+						echo "<a href='" . BASE_URL . "myaccount.php'>My Account</a>";
+					}
+					else
+					{
+						echo "<p id='signIn'>Sign In<p>";
+					}
+				?>
 			</nav>
 		</header>
 
@@ -22,7 +31,10 @@
 				<input id='searchBtn' type='submit' value='Search'>
 			</section>
 
-			<section id="video" data-video-id="<?php echo $_GET['v']; ?>">
+			<section 
+				id="video" 
+				data-video-id="<?php echo $_GET['v']; ?>"
+			>
 				<video controls autoplay>
 					<source 
 						src="<?php echo BASE_URL; ?>uploads/<?php echo $_GET['v']; ?>.mp4" type="video/mp4">
@@ -33,7 +45,7 @@
 				<h2>You might also like...</h2>
 			</section>
 
-			<section id="videos">
+			<section id="videos" data-is-member="<?php echo $isMember; ?>">
 			</section>
 		</main>
 

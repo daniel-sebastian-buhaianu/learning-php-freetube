@@ -1,32 +1,44 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 	<head>
-		<title>spotube | home</title>
-		<link href='<?php echo BASE_URL; ?>styles.css' rel='stylesheet' type='text/css'>
+		<meta charset="utf-8">
+    	<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>FreeTube | Home</title>
+		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/layout.css">
+		<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/home.css">
 	</head>
+
 	<body>
 		<header>
-				<a href='<?php echo BASE_URL; ?>upload.php'>Upload</a> |
-				<a href='<?php echo BASE_URL; ?>my-videos.php'>My Videos</a>
+			<h1 id="logo">FreeTube</h1>
 			<nav>
-				<form name='logout' action='<?php echo BASE_URL; ?>php/logout.php' method='post'>
-					<input type='submit' name='logout' value='Log Out'>
-				</form>
+				<a href="<?php echo BASE_URL; ?>myaccount.php">My Account</a>
 			</nav>
-			<h1>SpoTube</h1>
 		</header>
 
 		<main>
-			<div id='search_form'>
-				<input id ='search_query' type='text' name='search_query' placeholder='search...'>
-				<input id='search_btn' type='submit' value='Search'>
-			</div>
+			<section id='searchWrapper'>
+				<input id ='searchBar' type='text' name='searchBar' placeholder='search youtube videos...'>
+				<input id='searchBtn' type='submit' value='Search'>
+			</section>
 		
-			<div id='search_results'>
-			</div>
+			<section id="videosDownloaded">
+				<h3>Videos You Can Watch Now</h3>
+			</section>
+
+
+			<section id="videosNotDownloaded">
+				<h3>Videos You Can Download</h3>
+			</section>
 		</main>
-		
+
+		<footer>
+			<a href="#logo">Go Up</a>
+		</footer>
+
+		<!-- Google API -->
 		<script src='https://apis.google.com/js/api.js'></script>
+		<!-- JS for this page -->
 		<script type='module' src='<?php echo BASE_URL; ?>js/home.js'></script>
 	</body>
 </html>

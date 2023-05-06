@@ -1,6 +1,6 @@
 import {
 	loadGapi, 
-	displayNVideosForGuests,
+	displayNVideos,
 
 } from './helper_functions.js';
 
@@ -10,11 +10,15 @@ import { SignIn } from './signIn.component.js';
 
 const main = () => {
 
-	const video = document.getElementById('video');
-	const videoId = video.dataset.videoId;
-	displayNVideosForGuests(10, videoId);
+	const videoSection= document.getElementById('video');
+	const videoId = videoSection.dataset.videoId;
 
-	SearchBar();
+	const videosSection = document.getElementById('videos');
+	const isMember = videosSection.dataset.isMember;
+
+	displayNVideos(10, videosSection, isMember, isMember, videoId);
+
+	SearchBar(isMember, null, null, true);
 
 	Logo();
 

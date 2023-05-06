@@ -109,9 +109,9 @@ const removeChildrenFromParent = (htmlParentNode) => {
 	}
 };
 
-const displayVideosForGuests = (videos) => {
+const displayVideos= (videos, elemWhereToDisplay, isMember=0) => {
 
-	const wrapper = document.getElementById('videos');
+	const wrapper = elemWhereToDisplay;
 
 	for (let video of videos)
 	{
@@ -135,7 +135,8 @@ const displayVideosForGuests = (videos) => {
 			unavailable.setAttribute('class', 'unavailable');
 
 			const span = document.createElement('span');
-			span.appendChild(document.createTextNode('Members Only'))
+			const spanText = isMember === 0 ? 'Members Only' : 'PC Download';
+			span.appendChild(document.createTextNode(spanText))
 
 			unavailable.appendChild(span);
 			div.appendChild(unavailable);
@@ -145,7 +146,8 @@ const displayVideosForGuests = (videos) => {
 
 			if (video['uploaded_by'] === null)
 			{
-				alert('Sorry, you need to sign in to watch this video');
+				const alertInfo = isMember === 0 ? 'Sorry, you need to sign in to watch this video' : 'Sorry, you need a PC to download this video';
+				alert(alertInfo);
 			}
 			else
 			{
@@ -157,14 +159,13 @@ const displayVideosForGuests = (videos) => {
 	}
 };
 
-const displayNVideosForGuests = (n, exclude=' ') => {
-	getDataFromServer(`php/get_videos.php?count=${n}&exclude=${exclude}`)
+const displayNVideos = (n, elemWhereToDisplay, isMember=0, uploaded=null, exclude='') => {
+	getDataFromServer(`php/get_videos.php?count=${n}&exclude=${exclude}&isMember=${isMember}&uploaded=${uploaded}`)
 		.then(
-			response => displayVideosForGuests(response), 
+			response => displayVideos(response, elemWhereToDisplay, isMember), 
 			error => console.log('error', error)
 	);
 };
-
 
 export {
 	BASE_URL,
@@ -179,6 +180,6 @@ export {
 	removeChildrenFromParent,
 	initGapiClient,
 	loadGapiClient,
-	displayVideosForGuests,
-	displayNVideosForGuests,
+	displayVideos,
+	displayNVideos,
 };

@@ -3,7 +3,7 @@
 <head>
 	<meta charset='utf-8'>
 	<meta name='viewport' content='width=device-width, initial-scale=1'>
-	<title>Sign In</title>
+	<title>FreeTube | Sign In</title>
 	<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/layout.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>css/sign-in-up.css">
 </head>

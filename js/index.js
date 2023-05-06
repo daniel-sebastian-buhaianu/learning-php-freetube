@@ -1,6 +1,6 @@
 import {
 	loadGapi,
-	displayNVideosForGuests,
+	displayNVideos,
 
 } from './helper_functions.js';
 
@@ -9,8 +9,8 @@ import { SearchBar } from './searchBar.component.js';
 import { SignIn } from './signIn.component.js';
 
 const main = () => {
-
-	displayNVideosForGuests(10);
+	
+	displayNVideos(10);
 
 	SearchBar();
 

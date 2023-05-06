@@ -36,7 +36,7 @@ main { margin-top: 1rem; display: flex; flex-direction: column; align-items: cen
 	border-radius: 0 0.5em 0.5em 0;
 }
 
-#videos { width: 100%; }
+.videos { width: 100%; }
 
 .video {
 	position: relative; 
