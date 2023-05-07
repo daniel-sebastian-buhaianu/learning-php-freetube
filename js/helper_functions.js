@@ -109,6 +109,81 @@ const removeChildrenFromParent = (htmlParentNode) => {
 	}
 };
 
+const specialStrlen = (str) => {
+	let strlen = 0;
+	for (let i = 0; i < str.length; i++)
+	{
+		if (str[i] >= 'A' && str[i] <= 'Z' || "()_/\\%@$&[]".includes(str[i]))
+		{
+			strlen += 1.2;
+		}
+		else
+		{
+			strlen += 1;
+		}
+	}
+	return Math.round(strlen);
+}
+
+const shortenVideoTitle = (title) => {
+	const maxCharsPerLine = 30;
+	const smallToBigRatio = 1.2;
+	const words = title.split(' ');
+
+	let firstLine = '';
+	let secondLine = '';
+	let charsPerLine = 0;
+	let index = 0;
+	while (charsPerLine < maxCharsPerLine && index < words.length)
+	{
+		const word = words[index];
+		const wordLen = specialStrlen(word);
+
+		if (charsPerLine + wordLen <= maxCharsPerLine)
+		{
+			firstLine += word + " ";
+			charsPerLine += wordLen + 1;
+			index++;
+		}
+		else
+		{
+			charsPerLine = maxCharsPerLine;
+		}
+	}
+	
+	charsPerLine = 0;
+	while (charsPerLine < maxCharsPerLine && index < words.length)
+	{
+		const word = words[index];
+		const wordLen = specialStrlen(word);
+
+		if (charsPerLine + wordLen <= maxCharsPerLine)
+		{
+			secondLine += word + " ";
+			charsPerLine += wordLen + 1;
+			index++;
+		}
+		else
+		{
+			const maxCharsLeft = maxCharsPerLine - charsPerLine;
+
+			if (maxCharsLeft >= 3)
+			{
+				secondLine += "...";
+			}
+			else
+			{
+				
+			}
+
+			charsPerLine = maxCharsPerLine;
+		}
+	}
+
+	title = firstLine + secondLine;
+	return title;
+} 
+
 const displayVideos= (videos, elemWhereToDisplay, isMember=0) => {
 
 	const wrapper = elemWhereToDisplay;
@@ -119,12 +194,12 @@ const displayVideos= (videos, elemWhereToDisplay, isMember=0) => {
 		div.setAttribute('class', 'video');
 
 		const img = document.createElement('img');
-		img.setAttribute('src', `https://i.ytimg.com/vi/${video['id']}/mqdefault.jpg`);
 		img.style.opacity = video['uploaded_by'] === null ? 0.5 : 1;
+		img.setAttribute('src', `https://i.ytimg.com/vi/${video['id']}/mqdefault.jpg`);
 
 		const p = document.createElement('p');
 		const title = decodeHTMLEntities(video['title']);
-		p.appendChild(document.createTextNode(title));
+		p.appendChild(document.createTextNode(shortenVideoTitle(title)));
 
 		div.appendChild(img);
 		div.appendChild(p);
