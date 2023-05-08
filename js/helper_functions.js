@@ -3,7 +3,7 @@ import { googleApiKey } from './config.js';
 
 // Global variables
 const youtubeApiUrl = 'https://www.googleapis.com/discovery/v1/apis/youtube/v3/rest';
-const BASE_URL = 'http://localhost/spotube/';
+const BASE_URL = 'http://localhost/freetube-web/';
 
 
 const initGapiClient = async () => {
@@ -166,14 +166,35 @@ const shortenVideoTitle = (title) => {
 		else
 		{
 			const maxCharsLeft = maxCharsPerLine - charsPerLine;
+			switch (maxCharsLeft)
+			{
+				case 2:
+				{
+					let tmp = secondLine.slice(0, secondLine.length - 1);
+					tmp += '...';
+					secondLine = tmp;
+					break;
+				}
 
-			if (maxCharsLeft >= 3)
-			{
-				secondLine += "...";
-			}
-			else
-			{
+				case 1:
+				{	
+					let tmp = secondLine.slice(0, secondLine.length - 2);
+					tmp += '...';
+					secondLine = tmp;
+					break;
+				}
+
+				case 0:
+				{
+					let tmp = secondLine.slice(0, secondLine.length - 3);
+					tmp += '...';
+					secondLine = tmp;
+					break;
+				}
 				
+				default:
+					secondLine += '...';
+					break;
 			}
 
 			charsPerLine = maxCharsPerLine;

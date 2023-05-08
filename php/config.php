@@ -1,6 +1,6 @@
 <?php 
 
-define('BASE_URL', '/spotube/');
+define('BASE_URL', '/freetube-web/');
 define('ROOT_PATH', $_SERVER['DOCUMENT_ROOT']);
 
 
