@@ -1,21 +1,5 @@
 * { margin: 0; padding: 0; }
 
-@media (min-width: 992px) 
-{
-	body {
-		width: 768px;
-		margin: 0 auto;
-	}
-}
-
-@media (min-width: 1200px) 
-{
-	body {
-		width: 992px;
-		margin: 0 auto;
-	}
-}
-
 h1 { font-size: 1.5em; }
 
 a:visited { color: blue; }
@@ -27,9 +11,24 @@ header {
 	padding: 0.5rem;
 }
 
+@media (min-width: 600px) 
+{
+	header { width: 576px; margin: 0 auto; }
+}
+
+@media (min-width: 768px)
+{
+	header { width: 700px; }
+}
+
 @media (min-width: 1200px)
 {
-	header { padding: 1rem; }
+	header { width: 992px; padding: 1rem; }
+}
+
+@media (min-width: 1500px)
+{
+	header { width: 1400px; }
 }
 
 #logo { cursor: pointer }
@@ -38,11 +37,31 @@ nav > p { color: blue; text-decoration: underline; cursor: pointer; }
 
 main { margin-top: 1rem; display: flex; flex-direction: column; align-items: center}
 
+@media (min-width: 400px) 
+{
+	main { width: 400px; margin: 0 auto; }
+}
+
+@media (min-width: 768px)
+{
+	main { width: 700px; margin-top: 1rem; }
+}
+
+@media (min-width: 1200px)
+{
+	main { width: 992px; }
+}
+
+@media (min-width: 1500px)
+{
+	main { width: 1400px; }
+}
+
 #searchWrapper { width: 100%; display: flex; justify-content: center; }
 
-@media (min-width: 1200px) 
+@media (min-width: 1500px)
 {
-	#searchWrapper { width: 60%; }
+	#searchWrapper { width: 992px; }
 }
 
 #searchBar { 
@@ -60,6 +79,7 @@ main { margin-top: 1rem; display: flex; flex-direction: column; align-items: cen
 	color: white; 
 	border: 1px solid black;
 	border-radius: 0 0.5em 0.5em 0;
+	cursor: pointer;
 }
 
 #videosDownloaded > h3,
@@ -69,6 +89,12 @@ main { margin-top: 1rem; display: flex; flex-direction: column; align-items: cen
 	text-decoration: underline;
 }
 
+@media (min-width: 768px)
+{
+	#videosDownloaded,
+	#videosNotDownloaded { width: 100%; }
+}
+
 @media (min-width: 1200px)
 {
 	#videosDownloaded,
@@ -76,6 +102,11 @@ main { margin-top: 1rem; display: flex; flex-direction: column; align-items: cen
 }
 
 .videos { width: 100%; }
+
+@media (min-width: 768px)
+{
+	.videos { display: flex; flex-wrap: wrap; justify-content: space-around; }
+}
 
 @media (min-width: 1200px)
 {
@@ -97,14 +128,26 @@ main { margin-top: 1rem; display: flex; flex-direction: column; align-items: cen
 	cursor: pointer;
 }
 
+@media (min-width: 768px)
+{
+	.video { 
+		width: 45%; 
+		box-shadow: rgba(100,100,111,0.2) 0px 7px 29px 0px;
+		border-radius: 1rem;
+	}
+}
+
 @media (min-width: 1200px)
 {
 	.video { 
 		margin: 1rem; 
 		width: 30%; 
-		box-shadow: rgba(100,100,111,0.2) 0px 7px 29px 0px;
-		border-radius: 1rem;
 	}
+}
+
+@media (min-width: 1500px)
+{
+	.video { width: 22%; }
 }
 
 .video > img { width: 100%; }

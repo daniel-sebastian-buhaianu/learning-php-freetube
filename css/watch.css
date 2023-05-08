@@ -1,3 +1,8 @@
 #video > video { width: 100%; margin-top: 1rem; }
 
 #alsoLike { margin-top: 2rem; }
+
+@media (min-width: 1200px)
+{
+	#videos { width: 100%; display: flex; flex-wrap: wrap; }
+}
