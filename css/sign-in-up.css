@@ -1,6 +1,16 @@
+@media (min-width: 500px)
+{
+	header { padding: 1rem; }
+}
+
 #logo { font-size: 1.2em; }
 
 main { margin-top: 5rem; width: 100% }
+
+@media (min-width: 576px)
+{
+	main { width: 450px; }
+}
 
 #form { width: 75%; }
 
