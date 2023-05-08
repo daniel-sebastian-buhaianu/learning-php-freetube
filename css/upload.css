@@ -1,0 +1,37 @@
+@media (min-width: 1500px)
+{
+	main { width: 992px; }
+}
+
+#title > h1 { text-decoration: underline; }
+
+#main {
+	margin-top: 1rem; 
+	display: flex; 
+}
+
+#instructions { max-width: 60%; }
+
+@media (min-width: 1200px)
+{
+	#instructions { max-width: 80%; }
+}
+
+#instructions > ol { margin-top: 0.5rem; padding: 0.5rem; }
+
+#instructions > ol > li { margin-top: 0.5rem; }
+
+#uploadVideoForm {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	border: 1px solid black;
+	border-top: 0;
+	border-right: 0;
+	border-bottom: 0;
+	padding: 1rem;
+}
+
+#uploadVideoForm > * { margin-top: 1rem; }
+
+p.error { color: red };

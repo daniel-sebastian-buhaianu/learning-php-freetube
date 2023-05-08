@@ -205,6 +205,24 @@ const shortenVideoTitle = (title) => {
 	return title;
 } 
 
+const isUserDeviceMobile = () => {
+
+	console.log('useragent', navigator.userAgent);
+	
+	if (navigator.userAgent.match(/Android/i)
+	     || navigator.userAgent.match(/webOS/i)
+	     || navigator.userAgent.match(/iPhone/i)
+	     || navigator.userAgent.match(/iPad/i)
+	     || navigator.userAgent.match(/iPod/i)
+	     || navigator.userAgent.match(/BlackBerry/i)
+	     || navigator.userAgent.match(/Windows Phone/i)) 
+	{
+		return true;
+	}
+
+	return false;
+}
+
 const displayVideos= (videos, elemWhereToDisplay, isMember=0) => {
 
 	const wrapper = elemWhereToDisplay;
@@ -242,8 +260,19 @@ const displayVideos= (videos, elemWhereToDisplay, isMember=0) => {
 
 			if (video['uploaded_by'] === null)
 			{
-				const alertInfo = isMember === 0 ? 'Sorry, you need to sign in to watch this video' : 'Sorry, you need a PC to download this video';
-				alert(alertInfo);
+				if (!isMember)
+				{
+					alert('Sorry, you need to sign in to watch this video');
+				}
+				else if (isUserDeviceMobile())
+				{
+					alert('Sorry, you need a PC to download this video');
+				}
+				else
+				{
+					window.open(`https://www.ssyoutube.com/watch?v=${video['id']}`, '_saveFromNet').focus();
+					window.location.href = BASE_URL + `upload.php?v=${video['id']}`;
+				}
 			}
 			else
 			{
@@ -263,6 +292,17 @@ const displayNVideos = (n, elemWhereToDisplay, isMember=0, uploaded=null, exclud
 	);
 };
 
+const calcVideosToDisplay = () => {
+
+	const width = window.screen.width;
+
+	if (width >= 1500) { return 12; }
+
+	if (width >= 768) { return 6; }
+
+	return 3;
+}
+
 export {
 	BASE_URL,
 	loadGapi,
@@ -278,4 +318,5 @@ export {
 	loadGapiClient,
 	displayVideos,
 	displayNVideos,
+	calcVideosToDisplay,
 };
