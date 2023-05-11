@@ -73,7 +73,7 @@ const handleDisplayVideos = (videos, isMember, whereToDisplayDownloaded, whereTo
 
 	if (downloadedVideos.length > 0)
 	{
-		displayVideos(downloadedVideos, whereToDisplayDownloaded, isMember);
+		displayVideos({videos: downloadedVideos, wrapper: whereToDisplayDownloaded, isMember: isMember});
 		whereToDisplayDownloaded.parentNode.style.display = 'block';
 	}
 	else
@@ -83,7 +83,7 @@ const handleDisplayVideos = (videos, isMember, whereToDisplayDownloaded, whereTo
 
 	if (notDownloadedVideos.length > 0)
 	{
-		displayVideos(notDownloadedVideos, whereToDisplayNotDownloaded, isMember);
+		displayVideos({videos: notDownloadedVideos, wrapper: whereToDisplayNotDownloaded, isMember: isMember});
 		whereToDisplayNotDownloaded.parentNode.style.display = 'block';
 	}
 	else
@@ -100,7 +100,7 @@ const handleSearch = (searchFunc, isMember, whereToDisplayDownloaded, whereToDis
 			response => {
 				if (response['source'] === 'gapi')
 				{
-					sendDataToServer(response['videos'], `php/add_yt_videos.php`)
+					sendDataToServer(response['videos'], `php/addYoutubeVideos.php`)
 						.then(response => response.json(), error => console.log('sendDataToServer err', error))
 							.then (videos => {
 

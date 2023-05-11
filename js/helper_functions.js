@@ -223,12 +223,82 @@ const isUserDeviceMobile = () => {
 	return false;
 }
 
-const displayVideos= (videos, elemWhereToDisplay, isMember=0) => {
+const displayVideos = (props) => {
 
-	const wrapper = elemWhereToDisplay;
-
-	for (let video of videos)
+	if (props.videos === undefined)
 	{
+		throw new Error('props.videos undefined in displayVideos');
+		return;
+	}
+
+	if (props.wrapper === undefined)
+	{
+		throw new Error('props.wrapper undefined in displayVideos');
+		return;
+	}
+
+	if (props.isMember === undefined)
+	{
+		props.isMember = 0;
+	}
+
+	if (props.addToPlaylistBtn === undefined)
+	{
+		props.addToPlaylistBtn = true;
+	}
+
+	const { videos, wrapper, isMember } = props;
+
+	const createAddToPlaylistBtn = (video) => {
+
+		if (video === undefined)
+		{
+			throw new Error('video is undefined in createAddToPlaylistBtn');
+			return;
+		}
+
+		btn = document.createElement('button');
+		btn.setAttribute('class', 'addToPlaylistBtn');
+		btn.appendChild(document.createTextNode('+'));
+
+		btn.addEventListener('click', (event) => {
+			sendDataToServer(video['id'], `${BASE_URL}php/addVideoToPlaylist.php`)
+				.then(response => response.json())
+					.then(response => console.log('sendDataToServer response.json():', response));
+		});	
+
+		return btn;
+	};
+
+	const defaultVideoCardClickHandler = (event) => {
+
+		if (!event.target.classList.contains('addToPlaylistBtn'))
+			{
+				if (video['uploaded_by'] === null)
+				{
+					if (!isMember)
+					{
+						alert('Sorry, you need to sign in to watch this video');
+					}
+					else if (isUserDeviceMobile())
+					{
+						alert('Sorry, you need a PC to download this video');
+					}
+					else
+					{
+						window.open(`https://www.ssyoutube.com/watch?v=${video['id']}`, '_saveFromNet').focus();
+						window.location.href = BASE_URL + `upload.php?v=${video['id']}`;
+					}
+				}
+				else
+				{
+					window.location.href = BASE_URL + `watch.php?v=${video['id']}`;
+				}
+			}
+	};
+
+	const createVideoCard = (video) => {
+
 		const div = document.createElement('div');
 		div.setAttribute('class', 'video');
 
@@ -256,39 +326,63 @@ const displayVideos= (videos, elemWhereToDisplay, isMember=0) => {
 			div.appendChild(unavailable);
 		}
 
-		div.addEventListener('click', () => {
+		div.addEventListener('click', (event) => 
 
-			if (video['uploaded_by'] === null)
-			{
-				if (!isMember)
-				{
-					alert('Sorry, you need to sign in to watch this video');
-				}
-				else if (isUserDeviceMobile())
-				{
-					alert('Sorry, you need a PC to download this video');
-				}
-				else
-				{
-					window.open(`https://www.ssyoutube.com/watch?v=${video['id']}`, '_saveFromNet').focus();
-					window.location.href = BASE_URL + `upload.php?v=${video['id']}`;
-				}
-			}
-			else
-			{
-				window.location.href = BASE_URL + `watch.php?v=${video['id']}`;
-			}
-		});
+		if (btn !== undefined)
+		{
+			
 
-		wrapper.appendChild(div);
+			
+		}
+
+		return div;
+	};
+
+	for (let video of videos)
+	{
+		wrapper.appendChild(createVideoCard(video));
 	}
 };
 
-const displayNVideos = (n, elemWhereToDisplay, isMember=0, uploaded=null, exclude='') => {
-	getDataFromServer(`php/get_videos.php?count=${n}&exclude=${exclude}&uploaded=${uploaded}`)
+const displayNVideos = (props) => {
+
+	if (props.isMember === undefined)
+	{
+		props.isMember = 0;
+	}
+
+	if (props.uploaded === undefined)
+	{
+		props.uploaded = null;
+	}
+
+	if (props.exclude === undefined)
+	{
+		props.exclude = '';
+	}
+
+	if (props.playlistName === undefined)
+	{
+		props.playlistName = null;
+	}
+
+	if (props.n === undefined)
+	{
+		props.n = 6;
+	}
+
+	if (props.wrapper === undefined)
+	{
+		throw new Error('displayNVideos wrapper property is missing');
+		return;
+	}
+
+	const { n, wrapper, isMember, uploaded, exclude, playlistName } = props;
+
+	getDataFromServer(`php/getVideos.php?count=${n}&exclude=${exclude}&uploaded=${uploaded}&playlistName=${playlistName}`)
 		.then(
-			response => displayVideos(response, elemWhereToDisplay, isMember), 
-			error => console.log('error', error)
+			response => displayVideos({ videos: response, wrapper: wrapper, isMember: isMember }), 
+			error => console.log('getDataFromServer error', error)
 	);
 };
 

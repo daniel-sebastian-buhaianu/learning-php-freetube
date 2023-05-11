@@ -16,7 +16,7 @@ const main = () => {
 	const videosSection = document.getElementById('videos');
 	const isMember = videosSection.dataset.isMember;
 
-	displayNVideos(10, videosSection, isMember, isMember, videoId);
+	displayNVideos({n: 10, wrapper: videosSection, isMember: isMember, uploaded: isMember, exclude: videoId});
 
 	SearchBar(isMember, null, null, true);
 

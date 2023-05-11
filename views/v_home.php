@@ -12,7 +12,8 @@
 		<header>
 			<h1 id="logo">FreeTube</h1>
 			<nav>
-				<a href="<?php echo BASE_URL; ?>myaccount.php">My Account</a>
+				<a href="<?php echo BASE_URL; ?>myplaylist.php">My Playlist</a> | 
+				<a href="<?php echo BASE_URL; ?>signout.php">Sign Out</a>
 			</nav>
 		</header>
 

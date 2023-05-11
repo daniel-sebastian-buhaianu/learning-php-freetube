@@ -1,6 +1,7 @@
 <?php  
 
 require_once('php/config.php');
+
 session_start();
 
 if (!isset($_SESSION['userId']))
@@ -9,7 +10,7 @@ if (!isset($_SESSION['userId']))
 }
 else
 {
-	include 'views/v_myaccount.php';
+	include 'views/v_myPlaylist.php';
 }
 
 ?>

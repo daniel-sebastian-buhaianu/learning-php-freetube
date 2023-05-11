@@ -15,7 +15,9 @@
 				<?php
 					if ($isMember)
 					{
-						echo "<a href='" . BASE_URL . "myaccount.php'>My Account</a>";
+						echo "<a href='" . BASE_URL . "myplaylist.php'>My Playlist</a> | ";
+						echo "<a href='" . BASE_URL . "signout.php'>Sign Out</a>";
+
 					}
 					else
 					{
