@@ -13,9 +13,5 @@ session_start();
 
 require '../app/core/init.php';
 
-/**
- * Start app.
- */
 $app = new App();
 
-$app->to_string();

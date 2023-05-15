@@ -1,0 +1,56 @@
+p > a {
+	font-weight: bold;
+}
+
+form {
+	width: 350px;
+	margin: 0 auto;
+}
+
+form > * {
+	margin-top: 1rem;
+}
+
+input {
+	padding: 0.5rem;
+	border: 1px solid #0000003d;
+	border-radius: 1rem;
+}
+
+.form-title {
+	font-weight: bold;
+	text-align: center;
+	font-size: 1.5em;
+	margin-bottom: 1rem;
+}
+
+.form-alert {
+	background: #db0707;
+	color: white;
+	border: 1px solid transparent;
+	border-radius: 1rem;
+	padding: 0.5rem;
+}
+
+.form-error {
+	color: #db0707;
+	font-size: 0.9em;
+	margin-left: 0.5rem;
+	margin-top: 0.1rem;
+}
+
+.form-field-wrapper {
+	display: flex;
+	flex-direction: column;
+}
+
+.form-field-wrapper > label {
+	margin-bottom: 0.25rem;
+}
+
+.submit-btn {
+	border: 1px solid #0000003d;
+	border-radius: 1rem;
+	cursor: pointer;
+
+}

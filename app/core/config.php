@@ -20,6 +20,11 @@ define( 'DB_PASS', $db_pass );
 define( 'ROOT', 'http://localhost/ftube/public' );
 
 /**
+ * Path to app folder
+ */
+define( 'APP_FOLDER', 'http://localhost/ftube/app' );
+
+/**
  * Used for debugging
  *
  * If set to "true" it will display the errors to the client.

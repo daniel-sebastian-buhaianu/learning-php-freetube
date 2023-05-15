@@ -23,12 +23,8 @@ class App {
 	 */
 	public function __construct() {
 
-		$url        = strtolower( get_query_string_value( 'url' ) ?? 'index' );
-		$words      = get_words_from_path( $url );
-		$first_word = $words[0];
-
-		$this->controller        = ucfirst( $first_word );
-		$this->controller_method = '__construct';
+		$this->controller        = get_controller_name();
+		$this->controller_method = 'index';
 
 		$this->load_controller();
 	}
@@ -40,9 +36,9 @@ class App {
 	 */
 	private function load_controller() {
 
-		$controller = lcfirst( $this->controller );
+		$controller_filename = strtolower( join_words_with_string( $this->controller, '-' ) ) . '.controller.php';
 
-		$filename = "../app/controllers/{$controller}.controller.php";
+		$filename = "../app/controllers/{$controller_filename}";
 		if ( file_exists( $filename ) ) {
 
 			require $filename;
@@ -55,6 +51,9 @@ class App {
 
 			require $filename;
 		}
+
+		$controller = new $this->controller();
+		call_user_func( array( $controller, $this->controller_method ) );
 	}
 
 	/**

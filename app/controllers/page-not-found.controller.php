@@ -7,10 +7,21 @@ class Page_Not_Found {
 	use Controller;
 
 	/**
-	 * Constructor
+	 * $this->controller_name
+	 *
+	 * @var string $controller_name The controller's name.
 	 */
-	public function __construct() {
+	public $controller_name = 'Page_Not_Found';
 
-		$this->display_view( 'page-not-found' );
+	/**
+	 * Index method
+	 */
+	public function index() {
+
+		$variables = array();
+
+		$variables['controller_name'] = $this->controller_name;
+
+		$this->display_view( 'page-not-found', $variables );
 	}
 }
